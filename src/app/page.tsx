@@ -561,11 +561,11 @@ export default function HomePage() {
           <section className="py-10 md:py-20 px-2 sm:px-4 lg:px-8 bg-white">
             <div className="max-w-7xl mx-auto flex flex-col items-center">
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-center mb-8 md:mb-12 tracking-tight text-gray-900 font-heading">
-                Select a plan that's best for your study abroad goals
+                {section === 'europe' ? 'Choose your destination country' : 'Choose your program'}
               </h2>
               {/* Country/Program Selector (Europe/USA) */}
-              <div className="flex justify-center my-8">
-                <div className="relative inline-flex gap-2">
+              <div className="flex justify-center my-12">
+                <div className="relative inline-flex gap-5">
                   {/* Animated indicator for country/program selection */}
                   <motion.div
                     className="absolute top-0 bottom-0 rounded-full bg-primary z-0"
@@ -594,7 +594,7 @@ export default function HomePage() {
                 </div>
               </div>
               {/* Plans Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-12 w-full">
+              <div className="flex flex-wrap justify-center gap-6 md:gap-12 w-full">
                 {plans.map((plan, index) => (
                   <div
                     key={plan.tier + index}
