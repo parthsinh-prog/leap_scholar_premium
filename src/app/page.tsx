@@ -463,9 +463,9 @@ export default function HomePage() {
                 <div className="p-10 flex flex-col items-center">
                   <div className="text-center mb-8">
                     <h3 className="text-2xl font-bold text-gray-900 mb-2 font-heading">{plan.tier}</h3>
-                    <div className="flex flex-col items-center justify-center mb-4">
+                    <div className="flex flex-col items-center justify-center mb-2">
                       <span className="text-4xl font-extrabold text-primary">₹{plan.priceRange[0].toLocaleString("en-IN")}</span>
-                      <span className="text-lg text-gray-500 line-through mt-1">₹{plan.priceRange[1].toLocaleString("en-IN")}</span>
+                      <span className="text-lg text-gray-500 line-through mt-0.5">₹{plan.priceRange[1].toLocaleString("en-IN")}</span>
                     </div>
                   </div>
                   <div className="space-y-4 mb-8 w-full">
