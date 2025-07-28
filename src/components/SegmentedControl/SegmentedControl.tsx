@@ -19,12 +19,16 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({ options, value, onC
     if (btn && containerRef.current) {
       const { left: btnLeft, width } = btn.getBoundingClientRect();
       const { left: containerLeft } = containerRef.current.getBoundingClientRect();
-      setIndicator({ left: btnLeft - containerLeft, width });
+      const newLeft = btnLeft - containerLeft;
+      if (indicator.left !== newLeft || indicator.width !== width) {
+        setIndicator({ left: newLeft, width });
+      }
     }
+    // eslint-disable-next-line
   }, [options, value]);
 
   return (
-    <div ref={containerRef} className="relative flex bg-gray-100 rounded-full p-1 w-full max-w-xl mx-auto shadow-inner">
+    <div ref={containerRef} className="relative flex w-full max-w-xl mx-auto">
       {/* Animated indicator */}
       <motion.div
         className="absolute top-0 bottom-0 rounded-full bg-primary z-0"
@@ -40,7 +44,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({ options, value, onC
         <motion.button
           key={opt.value}
           ref={el => { btnRefs.current[idx] = el; return undefined; }}
-          className={`relative flex-1 z-10 px-4 py-2 rounded-full font-semibold text-base focus:outline-none transition-colors`}
+          className={`relative flex-1 z-10 px-4 py-2 rounded-full font-semibold text-base focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-colors`}
           style={{ zIndex: value === opt.value ? 20 : 10 }}
           onClick={() => onChange(opt.value)}
           aria-pressed={value === opt.value}
