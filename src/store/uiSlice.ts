@@ -4,6 +4,7 @@ export type Region = 'europe' | 'usa';
 export type EuropeCountry = 'germany' | 'france' | 'rest-of-europe';
 export type USProgram = 'ug' | 'mba' | 'ms';
 export type CountryOrProgram = EuropeCountry | USProgram;
+export type MainSection = 'plans' | 'testimonials' | 'faqs';
 
 interface UIState {
   region: Region;
@@ -11,6 +12,7 @@ interface UIState {
   isSidebarOpen: boolean;
   isModalOpen: boolean;
   openFaqIndex: number | null;
+  mainSection: MainSection;
 }
 
 const initialState: UIState = {
@@ -19,6 +21,7 @@ const initialState: UIState = {
   isSidebarOpen: false,
   isModalOpen: false,
   openFaqIndex: null,
+  mainSection: 'plans',
 };
 
 const uiSlice = createSlice({
@@ -47,6 +50,9 @@ const uiSlice = createSlice({
     setOpenFaqIndex(state, action: PayloadAction<number | null>) {
       state.openFaqIndex = action.payload;
     },
+    setMainSection(state, action: PayloadAction<MainSection>) {
+      state.mainSection = action.payload;
+    },
   },
 });
 
@@ -58,6 +64,7 @@ export const {
   openModal,
   closeModal,
   setOpenFaqIndex,
+  setMainSection,
 } = uiSlice.actions;
 
 export default uiSlice.reducer; 
