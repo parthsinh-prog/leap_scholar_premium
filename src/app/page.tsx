@@ -327,6 +327,76 @@ const faqsGermany = [
   },
 ];
 
+// USA: Testimonials
+const testimonialsUSAUG = [
+  {
+    name: 'Emily Johnson',
+    university: 'University of California, Berkeley',
+    text: `Leap Scholar made my undergraduate application process seamless and stress-free!`,
+  },
+  {
+    name: 'Rahul Mehta',
+    university: 'University of Michigan',
+    text: `Thanks to Leap Scholar, I got into my dream UG program in the US!`,
+  },
+  {
+    name: 'Samantha Lee',
+    university: 'University of Texas at Austin',
+    text: `The guidance and support from Leap Scholar was invaluable for my UG journey.`,
+  },
+  {
+    name: 'Carlos Ramirez',
+    university: 'University of Washington',
+    text: `Leap Scholar's expert team helped me every step of the way!`,
+  },
+];
+
+const testimonialsUSAMBA = [
+  {
+    name: 'Priya Singh',
+    university: 'Harvard Business School',
+    text: `Leap Scholar's MBA counseling was top-notch and helped me get into a top B-school!`,
+  },
+  {
+    name: 'John Smith',
+    university: 'Stanford Graduate School of Business',
+    text: `The personalized support from Leap Scholar made all the difference for my MBA applications.`,
+  },
+  {
+    name: 'Mei Chen',
+    university: 'Wharton School, University of Pennsylvania',
+    text: `Leap Scholar's team was always there to answer my questions and guide me.`,
+  },
+  {
+    name: 'Ahmed Al-Farsi',
+    university: 'Kellogg School of Management',
+    text: `I couldn't have navigated the MBA process without Leap Scholar!`,
+  },
+];
+
+const testimonialsUSAMS = [
+  {
+    name: 'Ananya Gupta',
+    university: 'Massachusetts Institute of Technology',
+    text: `Leap Scholar's MS counseling helped me get into MIT!`,
+  },
+  {
+    name: 'David Kim',
+    university: 'California Institute of Technology',
+    text: `The expert advice from Leap Scholar was crucial for my MS applications.`,
+  },
+  {
+    name: 'Fatima Zahra',
+    university: 'Carnegie Mellon University',
+    text: `Leap Scholar's support made my MS journey smooth and successful.`,
+  },
+  {
+    name: 'Lucas Rossi',
+    university: 'University of Illinois Urbana-Champaign',
+    text: `I highly recommend Leap Scholar for anyone applying to MS programs in the US!`,
+  },
+];
+
 export default function HomePage() {
   const [section, setSection] = useState<"europe" | "usa">("europe");
   const [countryOrProgram, setCountryOrProgram] = useState<string>("germany");
@@ -380,6 +450,14 @@ export default function HomePage() {
       testimonials = testimonialsRestOfEurope;
       steps = stepsRestOfEurope;
       faqs = faqsRestOfEurope;
+    }
+  } else if (section === 'usa') {
+    if (countryOrProgram === 'ug') {
+      testimonials = testimonialsUSAUG;
+    } else if (countryOrProgram === 'mba') {
+      testimonials = testimonialsUSAMBA;
+    } else if (countryOrProgram === 'ms') {
+      testimonials = testimonialsUSAMS;
     }
   }
 
