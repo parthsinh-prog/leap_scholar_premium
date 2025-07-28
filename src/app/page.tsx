@@ -464,23 +464,23 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-[#F4F3FF] to-white pt-20 pb-16 text-center flex flex-col items-center">
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 font-heading">
+      <section className="bg-gradient-to-b from-[#F4F3FF] to-white pt-10 md:pt-20 pb-8 md:pb-16 text-center flex flex-col items-center">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight mb-4 md:mb-6 font-heading">
           LEAP SCHOLAR <span className="bg-gradient-to-r from-[#5B5FE3] to-[#FF6B35] bg-clip-text text-transparent">PREMIUM</span>
         </h1>
-        <p className="text-2xl md:text-3xl text-gray-600 mb-10 max-w-2xl mx-auto font-body">
+        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600 mb-6 md:mb-10 max-w-2xl mx-auto font-body">
           The premium service which helps you land your dream College
         </p>
-        <div className="flex flex-row gap-6 mb-12 justify-center">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-8 md:mb-12 justify-center w-full max-w-xs md:max-w-none">
           <button
-            className={`flex items-center gap-2 px-8 py-3 rounded-full border-2 font-semibold shadow transition-all duration-200 text-lg text-primary ${section === "europe" ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
+            className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full border-2 font-semibold shadow transition-all duration-200 text-base md:text-lg text-primary ${section === "europe" ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
             onClick={() => { setSection("europe"); setCountryOrProgram("germany"); }}
             aria-pressed={section === "europe"}
           >
             <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇪🇺</span> Europe
           </button>
           <button
-            className={`flex items-center gap-2 px-8 py-3 rounded-full border-2 font-semibold shadow transition-all duration-200 text-lg text-primary ${section === "usa" ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
+            className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full border-2 font-semibold shadow transition-all duration-200 text-base md:text-lg text-primary ${section === "usa" ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
             onClick={() => { setSection("usa"); setCountryOrProgram("ug"); }}
             aria-pressed={section === "usa"}
           >
@@ -490,17 +490,17 @@ export default function HomePage() {
       </section>
 
       {/* Plan Selection */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-10 md:py-20 px-2 sm:px-4 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-12 text-gray-900 font-heading">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-center mb-8 md:mb-12 text-gray-900 font-heading">
             Select a plan that's best for your study abroad goals
           </h2>
           {section === 'europe' && (
-            <div className="flex flex-wrap justify-center gap-6 mb-12">
+            <div className="flex flex-col md:flex-row flex-wrap justify-center gap-4 md:gap-6 mb-8 md:mb-12 w-full max-w-xs md:max-w-none">
               {options.map(option => (
                 <button
                   key={option.key}
-                  className={`px-8 py-3 rounded-full font-semibold shadow transition-all duration-200 text-lg border-2 text-primary ${countryOrProgram === option.key ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
+                  className={`px-6 md:px-8 py-3 rounded-full font-semibold shadow transition-all duration-200 text-base md:text-lg border-2 text-primary ${countryOrProgram === option.key ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
                   onClick={() => setCountryOrProgram(option.key)}
                   aria-pressed={countryOrProgram === option.key}
                 >
@@ -511,11 +511,11 @@ export default function HomePage() {
           )}
           {/* USA program selector */}
           {section === 'usa' && (
-            <div className="flex flex-wrap justify-center gap-6 mb-12">
+            <div className="flex flex-col md:flex-row flex-wrap justify-center gap-4 md:gap-6 mb-8 md:mb-12 w-full max-w-xs md:max-w-none">
               {usaPrograms.map(program => (
                 <button
                   key={program.key}
-                  className={`px-8 py-3 rounded-full font-semibold shadow transition-all duration-200 text-lg border-2 text-primary ${countryOrProgram === program.key ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
+                  className={`px-6 md:px-8 py-3 rounded-full font-semibold shadow transition-all duration-200 text-base md:text-lg border-2 text-primary ${countryOrProgram === program.key ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
                   onClick={() => setCountryOrProgram(program.key)}
                   aria-pressed={countryOrProgram === program.key}
                 >
@@ -525,7 +525,7 @@ export default function HomePage() {
             </div>
           )}
           {/* Plans Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-12 w-full">
             {plans.map((plan, index) => (
               <div
                 key={plan.tier + index}
@@ -538,15 +538,15 @@ export default function HomePage() {
                     </span>
                   </div>
                 )}
-                <div className="p-10 flex flex-col items-center">
-                  <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2 font-heading">{plan.tier}</h3>
-                    <div className="flex flex-col items-center justify-center mb-2">
-                      <span className="text-4xl font-extrabold text-primary">₹{plan.priceRange[0].toLocaleString("en-IN")}</span>
-                      <span className="text-lg text-gray-500 line-through mt-0.5">₹{plan.priceRange[1].toLocaleString("en-IN")}</span>
+                <div className="p-4 md:p-10 flex flex-col items-center">
+                  <div className="text-center mb-4 md:mb-8">
+                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 md:mb-2 font-heading">{plan.tier}</h3>
+                    <div className="flex flex-col items-center justify-center mb-1 md:mb-2">
+                      <span className="text-2xl md:text-4xl font-extrabold text-primary">₹{plan.priceRange[0].toLocaleString("en-IN")}</span>
+                      <span className="text-base md:text-lg text-gray-500 line-through mt-0.5">₹{plan.priceRange[1].toLocaleString("en-IN")}</span>
                     </div>
                   </div>
-                  <div className="space-y-4 mb-8 w-full">
+                  <div className="space-y-2 md:space-y-4 mb-4 md:mb-8 w-full">
                     <div className="flex items-start">
                       <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0" />
                       <span className="text-gray-700">{plan.applications}</span>
