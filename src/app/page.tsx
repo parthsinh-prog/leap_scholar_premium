@@ -6,7 +6,7 @@ import { plansData, EuropeCountry, USProgram, Plan } from "../constants/plans";
 import { motion } from 'framer-motion';
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store";
-import { setRegion, setCountryOrProgram, CountryOrProgram } from "../store/uiSlice";
+import { setRegion, setCountryOrProgram, CountryOrProgram, setOpenFaqIndex } from "../store/uiSlice";
 
 // France: What makes Leap Scholar different?
 const leapStatsFrance = [
@@ -402,9 +402,9 @@ const testimonialsUSAMS = [
 
 export default function HomePage() {
   const dispatch = useDispatch();
-  const section = useSelector((state: RootState) => state.ui.region);
-  const countryOrProgram = useSelector((state: RootState) => state.ui.countryOrProgram);
-  const [openFaq, setOpenFaq] = React.useState<number | null>(null);
+  const section = useSelector<RootState, string>((state) => state.ui.region);
+  const countryOrProgram = useSelector<RootState, string>((state) => state.ui.countryOrProgram);
+  const openFaq = useSelector<RootState, number | null>((state) => state.ui.openFaqIndex);
 
   let options: { key: string; label: string }[] = [];
   let plans: Plan[] = [];
@@ -771,7 +771,7 @@ export default function HomePage() {
               <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300">
                 <button
                   className="w-full flex justify-between items-center p-6 text-left focus:outline-none hover:bg-gray-50 transition"
-                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                  onClick={() => dispatch(setOpenFaqIndex(openFaq === index ? null : index))}
                   aria-expanded={openFaq === index}
                   aria-controls={`faq-panel-${index}`}
                 >

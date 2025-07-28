@@ -10,6 +10,7 @@ interface UIState {
   countryOrProgram: CountryOrProgram;
   isSidebarOpen: boolean;
   isModalOpen: boolean;
+  openFaqIndex: number | null;
 }
 
 const initialState: UIState = {
@@ -17,6 +18,7 @@ const initialState: UIState = {
   countryOrProgram: 'germany',
   isSidebarOpen: false,
   isModalOpen: false,
+  openFaqIndex: null,
 };
 
 const uiSlice = createSlice({
@@ -25,7 +27,6 @@ const uiSlice = createSlice({
   reducers: {
     setRegion(state, action: PayloadAction<Region>) {
       state.region = action.payload;
-      // Reset country/program on region change
       state.countryOrProgram = action.payload === 'europe' ? 'germany' : 'ug';
     },
     setCountryOrProgram(state, action: PayloadAction<CountryOrProgram>) {
@@ -43,6 +44,9 @@ const uiSlice = createSlice({
     closeModal(state) {
       state.isModalOpen = false;
     },
+    setOpenFaqIndex(state, action: PayloadAction<number | null>) {
+      state.openFaqIndex = action.payload;
+    },
   },
 });
 
@@ -53,6 +57,7 @@ export const {
   closeSidebar,
   openModal,
   closeModal,
+  setOpenFaqIndex,
 } = uiSlice.actions;
 
 export default uiSlice.reducer; 
