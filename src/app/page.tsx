@@ -214,9 +214,9 @@ const faqsRestOfEurope = [
 const investors = ["Investor 1", "Investor 2", "Investor 3", "Investor 4"];
 
 const countryLabels: Record<EuropeCountry, string> = {
-  germany: "Germany",
-  france: "France",
-  "rest-of-europe": "Rest of Europe",
+  germany: "🇩🇪 Germany",
+  france: "🇫🇷 France",
+  "rest-of-europe": "🇪🇺 Rest of Europe",
 };
 const programLabels: Record<USProgram, string> = {
   ug: "UG",
