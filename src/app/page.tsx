@@ -473,14 +473,14 @@ export default function HomePage() {
         </p>
         <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-8 md:mb-12 justify-center w-full max-w-xs md:max-w-none">
           <button
-            className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full border-2 font-semibold shadow transition-all duration-200 text-base md:text-lg text-primary ${section === "europe" ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
+            className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full border-2 font-semibold shadow-md transition-all duration-200 text-base md:text-lg text-primary hover:scale-105 hover:shadow-xl active:scale-95 ${section === "europe" ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
             onClick={() => { setSection("europe"); setCountryOrProgram("germany"); }}
             aria-pressed={section === "europe"}
           >
             <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇪🇺</span> Europe
           </button>
           <button
-            className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full border-2 font-semibold shadow transition-all duration-200 text-base md:text-lg text-primary ${section === "usa" ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
+            className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full border-2 font-semibold shadow-md transition-all duration-200 text-base md:text-lg text-primary hover:scale-105 hover:shadow-xl active:scale-95 ${section === "usa" ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
             onClick={() => { setSection("usa"); setCountryOrProgram("ug"); }}
             aria-pressed={section === "usa"}
           >
@@ -492,7 +492,7 @@ export default function HomePage() {
       {/* Plan Selection */}
       <section className="py-10 md:py-20 px-2 sm:px-4 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-center mb-8 md:mb-12 text-gray-900 font-heading">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-center mb-8 md:mb-12 tracking-tight text-gray-900 font-heading">
             Select a plan that's best for your study abroad goals
           </h2>
           {section === 'europe' && (
@@ -500,7 +500,7 @@ export default function HomePage() {
               {options.map(option => (
                 <button
                   key={option.key}
-                  className={`px-6 md:px-8 py-3 rounded-full font-semibold shadow transition-all duration-200 text-base md:text-lg border-2 text-primary ${countryOrProgram === option.key ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
+                  className={`px-6 md:px-8 py-3 rounded-full font-semibold shadow-md transition-all duration-200 text-base md:text-lg border-2 text-primary hover:scale-105 hover:shadow-xl active:scale-95 ${countryOrProgram === option.key ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
                   onClick={() => setCountryOrProgram(option.key)}
                   aria-pressed={countryOrProgram === option.key}
                 >
@@ -515,7 +515,7 @@ export default function HomePage() {
               {usaPrograms.map(program => (
                 <button
                   key={program.key}
-                  className={`px-6 md:px-8 py-3 rounded-full font-semibold shadow transition-all duration-200 text-base md:text-lg border-2 text-primary ${countryOrProgram === program.key ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
+                  className={`px-6 md:px-8 py-3 rounded-full font-semibold shadow-md transition-all duration-200 text-base md:text-lg border-2 text-primary hover:scale-105 hover:shadow-xl active:scale-95 ${countryOrProgram === program.key ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
                   onClick={() => setCountryOrProgram(program.key)}
                   aria-pressed={countryOrProgram === program.key}
                 >
@@ -529,7 +529,7 @@ export default function HomePage() {
             {plans.map((plan, index) => (
               <div
                 key={plan.tier + index}
-                className={`relative bg-white rounded-2xl shadow-lg border-2 transition-all duration-300 hover:shadow-2xl hover:scale-105 ${plan.tier === "LS Premium" ? "border-primary ring-4 ring-blue-100" : "border-gray-200"}`}
+                className={`relative bg-white/80 backdrop-blur rounded-3xl shadow-2xl shadow-primary/10 border border-primary/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/20 hover:scale-105 ${plan.tier === "LS Premium" ? "border-primary ring-4 ring-blue-100" : "border-gray-100"}`}
               >
                 {plan.tier === "LS Premium" && (
                   <div className="absolute -top-8 left-1/2 -translate-x-1/2 z-10 flex justify-center w-full">
@@ -596,7 +596,7 @@ export default function HomePage() {
                       </ul>
                     </div>
                   )}
-                  <button className={`w-full py-4 px-6 rounded-lg font-semibold text-lg transition-all duration-300 mt-2 ${plan.tier === "LS Premium" ? "bg-primary text-white hover:bg-secondary shadow-lg hover:shadow-xl" : "bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white"}`}>
+                  <button className={`w-full py-4 px-6 rounded-full font-semibold text-lg transition-all duration-300 mt-2 shadow-md hover:shadow-xl hover:scale-105 active:scale-95 ${plan.tier === "LS Premium" ? "bg-primary text-white hover:bg-secondary" : "bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white"}`}>
                     Enrol Now
                   </button>
                 </div>
@@ -614,7 +614,7 @@ export default function HomePage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             {leapStats.map((stat: { value: string; label: string }, index: number) => (
-              <div key={index} className="text-white">
+              <div key={index} className="bg-white/80 backdrop-blur rounded-3xl shadow-2xl shadow-primary/10 border border-primary/10 text-white p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/20 hover:scale-105">
                 <div className="text-4xl font-bold mb-2">{stat.value}</div>
                 <div className="text-lg">{stat.label}</div>
               </div>
@@ -631,7 +631,7 @@ export default function HomePage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {testimonials.map((testimonial: { name: string; university: string; text: string }, index: number) => (
-              <div key={index} className="bg-gradient-to-br from-background to-secondary/10 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+              <div key={index} className="bg-white/80 backdrop-blur rounded-3xl shadow-2xl shadow-primary/10 border border-primary/10 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/20 hover:scale-105">
                 <div className="flex items-center mb-4">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
