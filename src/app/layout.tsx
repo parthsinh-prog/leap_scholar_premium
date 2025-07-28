@@ -10,7 +10,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="bg-gradient-to-b from-background to-white font-body min-h-screen">
         <Providers>
-          <AppShell>{children}</AppShell>
+          <AppShell>
+            <div className="w-full px-4 md:px-8">{children}</div>
+          </AppShell>
         </Providers>
       </body>
     </html>
