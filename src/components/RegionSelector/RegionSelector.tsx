@@ -23,7 +23,7 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onSelec
         onClick={() => { onSelect('europe'); setUsaSubRegion(null); }}
         onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { onSelect('europe'); setUsaSubRegion(null); } }}
       >
-        Europe
+        <span style={{ fontSize: '1.5rem', marginRight: '0.5rem', verticalAlign: 'middle' }}>🇪🇺</span>Europe
       </button>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <button
@@ -40,7 +40,7 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onSelec
           onClick={() => { onSelect('usa'); setUsaSubRegion(null); }}
           onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { onSelect('usa'); setUsaSubRegion(null); } }}
         >
-          USA
+          <span style={{ fontSize: '1.5rem', marginRight: '0.5rem', verticalAlign: 'middle' }}>🇺🇸</span>USA
         </button>
         {selectedRegion === 'usa' && (
           <div role="radiogroup" aria-label="Select USA Program" style={{ display: 'flex', gap: '1rem' }}>

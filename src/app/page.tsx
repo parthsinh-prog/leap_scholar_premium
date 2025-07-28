@@ -399,14 +399,14 @@ export default function HomePage() {
             onClick={() => { setSection("europe"); setCountryOrProgram("germany"); }}
             aria-pressed={section === "europe"}
           >
-            <Globe className="w-5 h-5" /> Europe
+            <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇪🇺</span> Europe
           </button>
           <button
             className={`flex items-center gap-2 px-8 py-3 rounded-full border-2 font-semibold shadow transition-all duration-200 text-lg text-primary ${section === "usa" ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
             onClick={() => { setSection("usa"); setCountryOrProgram("ug"); }}
             aria-pressed={section === "usa"}
           >
-            <Globe className="w-5 h-5" /> USA
+            <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇺🇸</span> USA
           </button>
         </div>
       </section>
