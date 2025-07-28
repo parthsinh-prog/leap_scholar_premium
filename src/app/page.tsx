@@ -17,22 +17,22 @@ const leapStatsFrance = [
 const testimonialsFrance = [
   {
     name: 'Adarsh Patil',
-    university: 'Technical University of Munich',
+    university: 'Sorbonne University',
     text: `Even when my visa looked difficult, Leap didn’t give up and guided me throughout the process.`,
   },
   {
     name: 'Poonam',
-    university: 'Heidelberg University',
+    university: 'École Polytechnique',
     text: `I never thought getting a France study permit would be such a smooth task.`,
   },
   {
     name: 'Akhil Surendi',
-    university: 'Humboldt University',
+    university: 'Sciences Po',
     text: `Leap Scholar's expert guidance transformed my profile, helping me get into my dream university!`,
   },
   {
     name: 'Sai Teja',
-    university: 'Ludwig Maximilian University of Munich',
+    university: 'HEC Paris',
     text: `I had an outstanding experience with Leap Scholar. I completed my IELTS coaching and achieved my desired band score in just 1.5 months.`,
   },
 ];
@@ -120,22 +120,22 @@ const leapStatsRestOfEurope = [
 const testimonialsRestOfEurope = [
   {
     name: 'Adarsh Patil',
-    university: 'Technical University of Munich',
+    university: 'University of Amsterdam',
     text: `Even when my visa looked difficult, Leap didn’t give up and guided me throughout the process.`,
   },
   {
     name: 'Poonam',
-    university: 'Heidelberg University',
-    text: `I never thought getting a German study permit would be such a smooth task.`,
+    university: 'KU Leuven',
+    text: `I never thought getting a European study permit would be such a smooth task.`,
   },
   {
     name: 'Akhil Surendi',
-    university: 'Humboldt University',
+    university: 'University of Zurich',
     text: `Leap Scholar's expert guidance transformed my profile, helping me get into my dream university!`,
   },
   {
     name: 'Sai Teja',
-    university: 'Ludwig Maximilian University of Munich',
+    university: 'Trinity College Dublin',
     text: `I had an outstanding experience with Leap Scholar. I completed my IELTS coaching and achieved my desired band score in just 1.5 months.`,
   },
 ];
