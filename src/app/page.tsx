@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef, useLayoutEffect, useState } from "react";
 import Image from "next/image";
 import { CheckCircle, Star, Plane, ArrowRight, Globe, GraduationCap, ChevronDown, ChevronUp } from "lucide-react";
 import { plansData, EuropeCountry, USProgram, Plan } from "../constants/plans";
@@ -408,6 +408,17 @@ export default function HomePage() {
   const openFaq = useSelector<RootState, number | null>((state) => state.ui.openFaqIndex);
   const mainSection = useSelector<RootState, string>((state) => state.ui.mainSection);
 
+  // --- Region Selector Animation State ---
+  const regionBtnRefs = [useRef<HTMLButtonElement>(null), useRef<HTMLButtonElement>(null)];
+  const [regionIndicator, setRegionIndicator] = useState({ left: 0, width: 0 });
+  useLayoutEffect(() => {
+    const idx = section === 'europe' ? 0 : 1;
+    const btn = regionBtnRefs[idx].current;
+    if (btn) {
+      setRegionIndicator({ left: btn.offsetLeft, width: btn.offsetWidth });
+    }
+  }, [section]);
+
   let options: { key: string; label: string }[] = [];
   let plans: Plan[] = [];
 
@@ -426,6 +437,21 @@ export default function HomePage() {
       plans = plansData.usa['ms']?.plans || [];
     }
   }
+
+  // --- Country/Program Selector Animation State ---
+  const optionBtnRefs = options.map(() => useRef<HTMLButtonElement>(null));
+  const [optionIndicator, setOptionIndicator] = useState({ left: 0, width: 0 });
+  useLayoutEffect(() => {
+    const idx = options.findIndex(opt => opt.key === countryOrProgram);
+    const btn = optionBtnRefs[idx]?.current;
+    if (btn) {
+      const newLeft = btn.offsetLeft;
+      const newWidth = btn.offsetWidth;
+      if (optionIndicator.left !== newLeft || optionIndicator.width !== newWidth) {
+        setOptionIndicator({ left: newLeft, width: newWidth });
+      }
+    }
+  }, [countryOrProgram, options]);
 
   // Only show one set of three buttons for USA: UG, MBA, MS
   const usaPrograms = [
@@ -477,21 +503,42 @@ export default function HomePage() {
         <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600 mb-6 md:mb-10 max-w-2xl mx-auto font-body">
           The premium service which helps you land your dream College
         </p>
-        <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-8 md:mb-12 justify-center w-full max-w-xs md:max-w-none">
-          <button
-            className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full border-2 font-semibold shadow-md transition-all duration-200 text-base md:text-lg text-primary hover:scale-105 hover:shadow-xl active:scale-95 ${section === "europe" ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
-            onClick={() => { dispatch(setRegion("europe")); }}
-            aria-pressed={section === "europe"}
-          >
-            <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇪🇺</span> Europe
-          </button>
-          <button
-            className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full border-2 font-semibold shadow-md transition-all duration-200 text-base md:text-lg text-primary hover:scale-105 hover:shadow-xl active:scale-95 ${section === "usa" ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
-            onClick={() => { dispatch(setRegion("usa")); }}
-            aria-pressed={section === "usa"}
-          >
-            <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇺🇸</span> USA
-          </button>
+        <div className="flex justify-center py-0">
+          <div className="relative inline-flex gap-2">
+            {/* Animated indicator for region selection */}
+            <motion.div
+              className="absolute top-0 bottom-0 rounded-full bg-primary z-0"
+              initial={false}
+              animate={{
+                left: regionIndicator.left,
+                width: regionIndicator.width,
+              }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              style={{ pointerEvents: 'none' }}
+            />
+            <motion.button
+              ref={regionBtnRefs[0]}
+              className={`relative z-10 px-8 py-3 rounded-full font-semibold shadow-md text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-colors`}
+              style={{ zIndex: section === 'europe' ? 20 : 10 }}
+              onClick={() => { dispatch(setRegion('europe')); }}
+              aria-pressed={section === 'europe'}
+              animate={{ color: section === 'europe' ? '#fff' : '#4A47FF' }}
+              transition={{ duration: 0.2 }}
+            >
+              <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇪🇺</span> Europe
+            </motion.button>
+            <motion.button
+              ref={regionBtnRefs[1]}
+              className={`relative z-10 px-8 py-3 rounded-full font-semibold shadow-md text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-colors`}
+              style={{ zIndex: section === 'usa' ? 20 : 10 }}
+              onClick={() => { dispatch(setRegion('usa')); }}
+              aria-pressed={section === 'usa'}
+              animate={{ color: section === 'usa' ? '#fff' : '#4A47FF' }}
+              transition={{ duration: 0.2 }}
+            >
+              <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇺🇸</span> USA
+            </motion.button>
+          </div>
         </div>
       </section>
 
@@ -516,35 +563,36 @@ export default function HomePage() {
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-center mb-8 md:mb-12 tracking-tight text-gray-900 font-heading">
                 Select a plan that's best for your study abroad goals
               </h2>
-              {section === 'europe' && (
-                <div className="flex flex-col md:flex-row flex-wrap justify-center gap-4 md:gap-6 mb-8 md:mb-12 w-full max-w-xs md:max-w-none">
-                  {options.map(option => (
-                    <button
+              {/* Country/Program Selector (Europe/USA) */}
+              <div className="flex justify-center my-8">
+                <div className="relative inline-flex gap-2">
+                  {/* Animated indicator for country/program selection */}
+                  <motion.div
+                    className="absolute top-0 bottom-0 rounded-full bg-primary z-0"
+                    initial={false}
+                    animate={{
+                      left: optionIndicator.left,
+                      width: optionIndicator.width,
+                    }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    style={{ pointerEvents: 'none' }}
+                  />
+                  {options.map((option, idx) => (
+                    <motion.button
                       key={option.key}
-                      className={`px-6 md:px-8 py-3 rounded-full font-semibold shadow-md transition-all duration-200 text-base md:text-lg border-2 text-primary hover:scale-105 hover:shadow-xl active:scale-95 ${countryOrProgram === option.key ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
-                      onClick={() => dispatch(setCountryOrProgram(option.key as CountryOrProgram))}
+                      ref={optionBtnRefs[idx]}
+                      className={`relative z-10 px-8 py-3 rounded-full font-semibold shadow-md text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-colors`}
+                      style={{ zIndex: countryOrProgram === option.key ? 20 : 10 }}
+                      onClick={() => dispatch(setCountryOrProgram(option.key as any))}
                       aria-pressed={countryOrProgram === option.key}
+                      animate={{ color: countryOrProgram === option.key ? '#fff' : '#4A47FF' }}
+                      transition={{ duration: 0.2 }}
                     >
                       {option.label}
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
-              )}
-              {/* USA program selector */}
-              {section === 'usa' && (
-                <div className="flex flex-col md:flex-row flex-wrap justify-center gap-4 md:gap-6 mb-8 md:mb-12 w-full max-w-xs md:max-w-none">
-                  {usaPrograms.map(program => (
-                    <button
-                      key={program.key}
-                      className={`px-6 md:px-8 py-3 rounded-full font-semibold shadow-md transition-all duration-200 text-base md:text-lg border-2 text-primary hover:scale-105 hover:shadow-xl active:scale-95 ${countryOrProgram === program.key ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
-                      onClick={() => dispatch(setCountryOrProgram(program.key as CountryOrProgram))}
-                      aria-pressed={countryOrProgram === program.key}
-                    >
-                      {program.label}
-                    </button>
-                  ))}
-                </div>
-              )}
+              </div>
               {/* Plans Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-12 w-full">
                 {plans.map((plan, index) => (
