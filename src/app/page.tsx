@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useLayoutEffect, useState } from "react";
+import React, { useRef, useLayoutEffect, useState, useEffect } from "react";
 import Image from "next/image";
 import { CheckCircle, Star, Plane, ArrowRight, Globe, GraduationCap, ChevronDown, ChevronUp } from "lucide-react";
 import { plansData, EuropeCountry, USProgram, Plan } from "../constants/plans";
@@ -493,6 +493,18 @@ export default function HomePage() {
     }
   }
 
+  const segmentedControlRef = useRef<HTMLDivElement>(null);
+  const prevSection = useRef(section);
+  useEffect(() => {
+    if (prevSection.current !== section && segmentedControlRef.current) {
+      const header = document.querySelector('header');
+      const headerHeight = header ? header.getBoundingClientRect().height : 80;
+      const top = segmentedControlRef.current.getBoundingClientRect().top + window.scrollY - headerHeight - 12;
+      window.scrollTo({ top, behavior: 'smooth' });
+      prevSection.current = section;
+    }
+  }, [section]);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-white">
       {/* Hero Section */}
@@ -543,7 +555,7 @@ export default function HomePage() {
       </section>
 
       {/* Segmented Control for main content */}
-      <div className="py-8">
+      <div className="py-8" ref={segmentedControlRef}>
         <SegmentedControl
           options={[
             { label: 'Plans', value: 'plans' },
