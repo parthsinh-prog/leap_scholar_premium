@@ -2,13 +2,15 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
-import { openSidebar, closeSidebar } from '../store/uiSlice';
+import { openSidebar, closeSidebar, openModal, closeModal } from '../store/uiSlice';
 import Sidebar from '../components/Sidebar/Sidebar';
+import GlassModal from '../components/GlassModal/GlassModal';
 import Image from 'next/image';
-import { Menu } from 'lucide-react';
+import { Menu, MessageCircle } from 'lucide-react';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const isSidebarOpen = useSelector((state: RootState) => state.ui.isSidebarOpen);
+  const isModalOpen = useSelector((state: RootState) => state.ui.isModalOpen);
   const dispatch = useDispatch();
 
   return (
@@ -38,6 +40,24 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <Sidebar isOpen={isSidebarOpen} onClose={() => dispatch(closeSidebar())} />
+      {/* Floating Action Button (FAB) */}
+      <button
+        className="fixed bottom-8 right-8 z-50 bg-primary text-white rounded-full shadow-lg p-5 flex items-center justify-center hover:bg-secondary hover:scale-110 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary"
+        onClick={() => dispatch(openModal())}
+        aria-label="Contact Us"
+      >
+        <MessageCircle className="w-7 h-7" />
+      </button>
+      {/* Glassmorphic Modal */}
+      <GlassModal isOpen={isModalOpen} onClose={() => dispatch(closeModal())}>
+        <h2 className="text-2xl font-bold mb-4 text-center font-heading">Contact Us</h2>
+        <form className="flex flex-col gap-4">
+          <input type="text" placeholder="Your Name" className="rounded-xl border border-primary/20 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary bg-white/70" />
+          <input type="email" placeholder="Your Email" className="rounded-xl border border-primary/20 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary bg-white/70" />
+          <textarea placeholder="How can we help you?" className="rounded-xl border border-primary/20 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary bg-white/70 resize-none min-h-[80px]" />
+          <button type="submit" className="bg-primary text-white rounded-xl py-3 font-semibold shadow-md hover:bg-secondary transition-all duration-200">Send Message</button>
+        </form>
+      </GlassModal>
       <div className="max-w-[1440px] mx-auto px-2 md:px-6 pt-4 md:pt-8 pb-8 md:pb-16">{children}</div>
     </>
   );
