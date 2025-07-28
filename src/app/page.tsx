@@ -1,9 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { CheckCircle, Star, Plane, ArrowRight, Globe, GraduationCap, ChevronDown, ChevronUp } from "lucide-react";
 import { plansData, EuropeCountry, USProgram, Plan } from "../constants/plans";
 import { motion } from 'framer-motion';
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../store";
+import { setRegion, setCountryOrProgram, CountryOrProgram } from "../store/uiSlice";
 
 // France: What makes Leap Scholar different?
 const leapStatsFrance = [
@@ -398,9 +401,10 @@ const testimonialsUSAMS = [
 ];
 
 export default function HomePage() {
-  const [section, setSection] = useState<"europe" | "usa">("europe");
-  const [countryOrProgram, setCountryOrProgram] = useState<string>("germany");
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const dispatch = useDispatch();
+  const section = useSelector((state: RootState) => state.ui.region);
+  const countryOrProgram = useSelector((state: RootState) => state.ui.countryOrProgram);
+  const [openFaq, setOpenFaq] = React.useState<number | null>(null);
 
   let options: { key: string; label: string }[] = [];
   let plans: Plan[] = [];
@@ -474,14 +478,14 @@ export default function HomePage() {
         <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-8 md:mb-12 justify-center w-full max-w-xs md:max-w-none">
           <button
             className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full border-2 font-semibold shadow-md transition-all duration-200 text-base md:text-lg text-primary hover:scale-105 hover:shadow-xl active:scale-95 ${section === "europe" ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
-            onClick={() => { setSection("europe"); setCountryOrProgram("germany"); }}
+            onClick={() => { dispatch(setRegion("europe")); }}
             aria-pressed={section === "europe"}
           >
             <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇪🇺</span> Europe
           </button>
           <button
             className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full border-2 font-semibold shadow-md transition-all duration-200 text-base md:text-lg text-primary hover:scale-105 hover:shadow-xl active:scale-95 ${section === "usa" ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
-            onClick={() => { setSection("usa"); setCountryOrProgram("ug"); }}
+            onClick={() => { dispatch(setRegion("usa")); }}
             aria-pressed={section === "usa"}
           >
             <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇺🇸</span> USA
@@ -501,7 +505,7 @@ export default function HomePage() {
                 <button
                   key={option.key}
                   className={`px-6 md:px-8 py-3 rounded-full font-semibold shadow-md transition-all duration-200 text-base md:text-lg border-2 text-primary hover:scale-105 hover:shadow-xl active:scale-95 ${countryOrProgram === option.key ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
-                  onClick={() => setCountryOrProgram(option.key)}
+                  onClick={() => dispatch(setCountryOrProgram(option.key as CountryOrProgram))}
                   aria-pressed={countryOrProgram === option.key}
                 >
                   {option.label}
@@ -516,7 +520,7 @@ export default function HomePage() {
                 <button
                   key={program.key}
                   className={`px-6 md:px-8 py-3 rounded-full font-semibold shadow-md transition-all duration-200 text-base md:text-lg border-2 text-primary hover:scale-105 hover:shadow-xl active:scale-95 ${countryOrProgram === program.key ? "bg-primary text-white border-primary" : "bg-white border-primary hover:bg-primary hover:text-white"}`}
-                  onClick={() => setCountryOrProgram(program.key)}
+                  onClick={() => dispatch(setCountryOrProgram(program.key as CountryOrProgram))}
                   aria-pressed={countryOrProgram === program.key}
                 >
                   {program.label}
