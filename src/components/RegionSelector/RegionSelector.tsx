@@ -12,8 +12,6 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onSelec
     <div role="radiogroup" aria-label="Select Region" style={{ display: 'flex', gap: '2rem', justifyContent: 'center', margin: '2rem 0' }}>
       <button
         className="cta focus:outline-none focus:ring-2 focus:ring-primary"
-        aria-checked={selectedRegion === 'europe'}
-        aria-label="Select Europe region"
         tabIndex={0}
         style={{
           opacity: selectedRegion === 'europe' ? 1 : 0.7,
@@ -28,8 +26,6 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onSelec
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <button
           className="cta focus:outline-none focus:ring-2 focus:ring-primary"
-          aria-checked={selectedRegion === 'usa'}
-          aria-label="Select USA region"
           tabIndex={0}
           style={{
             opacity: selectedRegion === 'usa' ? 1 : 0.7,
@@ -46,8 +42,6 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onSelec
           <div role="radiogroup" aria-label="Select USA Program" style={{ display: 'flex', gap: '1rem' }}>
             <button
               className="cta focus:outline-none focus:ring-2 focus:ring-primary"
-              aria-checked={usaSubRegion === 'ug'}
-              aria-label="Select UG program"
               tabIndex={0}
               style={{
                 opacity: usaSubRegion === 'ug' ? 1 : 0.7,
@@ -61,8 +55,6 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onSelec
             </button>
             <button
               className="cta focus:outline-none focus:ring-2 focus:ring-primary"
-              aria-checked={usaSubRegion === 'mba'}
-              aria-label="Select MBA program"
               tabIndex={0}
               style={{
                 opacity: usaSubRegion === 'mba' ? 1 : 0.7,
@@ -76,8 +68,6 @@ const RegionSelector: React.FC<RegionSelectorProps> = ({ selectedRegion, onSelec
             </button>
             <button
               className="cta focus:outline-none focus:ring-2 focus:ring-primary"
-              aria-checked={usaSubRegion === 'ms'}
-              aria-label="Select MS program"
               tabIndex={0}
               style={{
                 opacity: usaSubRegion === 'ms' ? 1 : 0.7,

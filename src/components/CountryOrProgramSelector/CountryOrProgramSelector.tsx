@@ -13,7 +13,6 @@ const CountryOrProgramSelector: React.FC<CountryOrProgramSelectorProps> = ({ opt
         <button
           key={option.key}
           className="cta focus:outline-none focus:ring-2 focus:ring-primary"
-          aria-checked={selectedKey === option.key}
           aria-label={`Select ${option.label}`}
           tabIndex={0}
           style={{

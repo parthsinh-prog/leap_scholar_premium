@@ -1,6 +1,6 @@
 "use client";
-import React, { useRef, useLayoutEffect, useState, useEffect } from "react";
-import { CheckCircle, Star, GraduationCap, ChevronDown, ChevronUp } from "lucide-react";
+import React, { useRef, useLayoutEffect, useState, useEffect, useMemo } from "react";
+import { CheckCircle, Star, GraduationCap, ChevronDown, ChevronUp, ChartNoAxesColumnIncreasingIcon } from "lucide-react";
 import { plansData, EuropeCountry, USProgram, Plan } from "../constants/plans";
 import { motion } from 'framer-motion';
 import { useSelector, useDispatch } from "react-redux";
@@ -450,8 +450,7 @@ export default function HomePage() {
         setOptionIndicator({ left: newLeft, width: newWidth });
       }
     }
-    // eslint-disable-next-line
-  }, [countryOrProgram, options, optionIndicator.left, optionIndicator.width]);
+  }, [countryOrProgram, options, optionIndicator.left, optionIndicator.width, optionBtnRefs]);
 
   // Only show one set of three buttons for USA: UG, MBA, MS
   // const usaPrograms = [
@@ -563,7 +562,7 @@ export default function HomePage() {
             { label: 'FAQs', value: 'faqs' },
           ]}
           value={mainSection}
-          onChange={(val) => dispatch(setMainSection(val as any))}
+          onChange={(val) => dispatch(setMainSection(val as EuropeCountry | USProgram))}
         />
       </div>
       {/* Main Content Sections */}

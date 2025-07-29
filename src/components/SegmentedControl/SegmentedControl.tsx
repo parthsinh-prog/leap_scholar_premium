@@ -24,7 +24,6 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({ options, value, onC
         setIndicator({ left: newLeft, width });
       }
     }
-    // eslint-disable-next-line
   }, [options, value, indicator.left, indicator.width]);
 
   return (
