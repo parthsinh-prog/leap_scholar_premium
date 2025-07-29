@@ -769,14 +769,13 @@ export default function HomePage() {
                 Your study abroad journey with Leap Scholar
               </h2>
               <div className="relative">
-                <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-primary/20 z-0" style={{ transform: 'translateX(-50%)' }} />
                 <div className="flex flex-col gap-16">
                   {steps.map((step, idx) => (
                     <motion.div
                       key={idx}
                       initial={{ opacity: 0, y: 40 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.3 }}
+                      viewport={{ once: false, amount: 0.3 }}
                       transition={{ duration: 0.6, delay: idx * 0.1 }}
                       className="relative flex items-start"
                     >
