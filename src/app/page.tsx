@@ -68,7 +68,7 @@ const stepsFrance = [
         description: 'Get 100+ templates and a professional editor to craft the SOP & LOR for your profile',
       },
       {
-        name: 'Application assistance',
+        name: 'Application assistance for your Dream Universities',
         description: `You're almost at the finish line, all that's left now is to put in your application (Don't worry our team of experts will do that for you!)`,
       },
     ],
@@ -79,6 +79,15 @@ const stepsFrance = [
       {
         name: 'Prep for Visa Interview',
         description: 'Once admit is received, a Visa expert will review your documents and also prep you up for the interview',
+      },
+    ],
+  },
+  {
+    title: 'Finally',
+    items: [
+      {
+        name: 'Fly to your dream college ✈️',
+        description: "That's it, you're ready to fly! Leap Community will be waiting to welcome you in your dream college",
       },
     ],
   },
@@ -171,7 +180,7 @@ const stepsRestOfEurope = [
         description: 'Get 100+ templates and a professional editor to craft the SOP & LOR for your profile',
       },
       {
-        name: 'Application assistance',
+        name: 'Application assistance for your Dream Universities',
         description: `You're almost at the finish line, all that's left now is to put in your application (Don't worry our team of experts will do that for you!)`,
       },
     ],
@@ -182,6 +191,15 @@ const stepsRestOfEurope = [
       {
         name: 'Prep for Visa Interview',
         description: 'Once admit is received, a Visa expert will review your documents and also prep you up for the interview',
+      },
+    ],
+  },
+  {
+    title: 'Finally',
+    items: [
+      {
+        name: 'Fly to your dream college ✈️',
+        description: "That's it, you're ready to fly! Leap Community will be waiting to welcome you in your dream college",
       },
     ],
   },
@@ -287,7 +305,7 @@ const stepsGermany = [
         description: 'Get 100+ templates and a professional editor to craft the SOP & LOR for your profile',
       },
       {
-        name: 'Application assistance',
+        name: 'Application assistance for your Dream Universities',
         description: `You're almost at the finish line, all that's left now is to put in your application (Don't worry our team of experts will do that for you!)`,
       },
     ],
@@ -298,6 +316,15 @@ const stepsGermany = [
       {
         name: 'Prep for Visa Interview',
         description: 'Once admit is received, a Visa expert will review your documents and also prep you up for the interview',
+      },
+    ],
+  },
+  {
+    title: 'Finally',
+    items: [
+      {
+        name: 'Fly to your dream college ✈️',
+        description: "That's it, you're ready to fly! Leap Community will be waiting to welcome you in your dream college",
       },
     ],
   },
@@ -772,7 +799,7 @@ export default function HomePage() {
                   viewport={{ once: true, amount: 0.2 }}
                 >
                   <motion.path
-                    d="M 80 96 Q 300 0 600 96 Q 900 192 1120 96"
+                    d="M 80 96 Q 200 0 400 96 Q 600 0 800 96 Q 1000 192 1120 96"
                     stroke="#5B5FE3"
                     strokeWidth="3"
                     fill="none"
@@ -789,14 +816,14 @@ export default function HomePage() {
                     fill="#5B5FE3"
                     initial={{ cx: 80, cy: 96, opacity: 0 }}
                     animate={{
-                      cx: [80, 300, 600, 900, 1120],
-                      cy: [96, 0, 96, 192, 96],
-                      opacity: [0, 1, 1, 1, 0],
+                      cx: [80, 200, 400, 600, 800, 1000, 1120],
+                      cy: [96, 0, 96, 0, 96, 192, 96],
+                      opacity: [0, 1, 1, 1, 1, 1, 0],
                     }}
                     transition={{ duration: 1.2, ease: 'easeInOut', repeat: Infinity, repeatDelay: 1 }}
                   />
                 </motion.svg>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 w-full z-10">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full z-10">
                   {steps.map((step, idx) => (
                     <motion.div
                       key={idx}
@@ -818,6 +845,7 @@ export default function HomePage() {
                         {idx === 0 && <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 20v-6m0 0V4m0 10l-3-3m3 3l3-3" /></svg>}
                         {idx === 1 && <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M16 3v4M8 3v4" /></svg>}
                         {idx === 2 && <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 20h9" /><path d="M12 4v16" /><path d="M3 20h9" /></svg>}
+                        {idx === 3 && <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>}
                       </motion.div>
                       <div className="bg-white rounded-xl shadow-md px-4 py-2 mb-6 -mt-2">
                         <h3 className="text-lg md:text-xl font-bold text-center font-heading text-gray-900 whitespace-normal">
