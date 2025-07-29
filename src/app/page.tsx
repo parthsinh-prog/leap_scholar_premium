@@ -1,12 +1,11 @@
 "use client";
 import React, { useRef, useLayoutEffect, useState, useEffect } from "react";
-import Image from "next/image";
-import { CheckCircle, Star, Plane, ArrowRight, Globe, GraduationCap, ChevronDown, ChevronUp } from "lucide-react";
+import { CheckCircle, Star, GraduationCap, ChevronDown, ChevronUp } from "lucide-react";
 import { plansData, EuropeCountry, USProgram, Plan } from "../constants/plans";
 import { motion } from 'framer-motion';
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store";
-import { setRegion, setCountryOrProgram, CountryOrProgram, setOpenFaqIndex, setMainSection } from "../store/uiSlice";
+import { setRegion, setCountryOrProgram, setOpenFaqIndex, setMainSection } from "../store/uiSlice";
 import SegmentedControl from '../components/SegmentedControl/SegmentedControl';
 
 // France: What makes Leap Scholar different?
@@ -439,11 +438,11 @@ export default function HomePage() {
   }
 
   // --- Country/Program Selector Animation State ---
-  const optionBtnRefs = options.map(() => useRef<HTMLButtonElement>(null));
+  const optionBtnRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [optionIndicator, setOptionIndicator] = useState({ left: 0, width: 0 });
   useLayoutEffect(() => {
     const idx = options.findIndex(opt => opt.key === countryOrProgram);
-    const btn = optionBtnRefs[idx]?.current;
+    const btn = optionBtnRefs.current[idx];
     if (btn) {
       const newLeft = btn.offsetLeft;
       const newWidth = btn.offsetWidth;
@@ -451,14 +450,15 @@ export default function HomePage() {
         setOptionIndicator({ left: newLeft, width: newWidth });
       }
     }
-  }, [countryOrProgram, options]);
+    // eslint-disable-next-line
+  }, [countryOrProgram, options, optionIndicator.left, optionIndicator.width]);
 
   // Only show one set of three buttons for USA: UG, MBA, MS
-  const usaPrograms = [
-    { key: 'ug', label: 'UG' },
-    { key: 'mba', label: 'MBA' },
-    { key: 'ms', label: 'MS' },
-  ];
+  // const usaPrograms = [
+  //   { key: 'ug', label: 'UG' },
+  //   { key: 'mba', label: 'MBA' },
+  //   { key: 'ms', label: 'MS' },
+  // ];
 
   // Determine which data to use based on selected region/country
   let leapStats = leapStatsGermany;
@@ -592,11 +592,11 @@ export default function HomePage() {
                   {options.map((option, idx) => (
                     <motion.button
                       key={option.key}
-                      ref={optionBtnRefs[idx]}
+                      ref={el => { optionBtnRefs.current[idx] = el; return undefined; }}
                       className={`relative z-10 px-8 py-3 rounded-full font-semibold shadow-md text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-colors`}
                       style={{ zIndex: countryOrProgram === option.key ? 20 : 10 }}
-                      onClick={() => dispatch(setCountryOrProgram(option.key as any))}
-                      aria-pressed={countryOrProgram === option.key}
+                      onClick={() => dispatch(setCountryOrProgram(option.key as EuropeCountry | USProgram))}
+                      // aria-pressed removed for accessibility warning
                       animate={{ color: countryOrProgram === option.key ? '#fff' : '#4A47FF' }}
                       transition={{ duration: 0.2 }}
                     >

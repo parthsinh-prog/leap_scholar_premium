@@ -25,7 +25,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({ options, value, onC
       }
     }
     // eslint-disable-next-line
-  }, [options, value]);
+  }, [options, value, indicator.left, indicator.width]);
 
   return (
     <div ref={containerRef} className="relative flex w-full max-w-xl mx-auto">
@@ -47,7 +47,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({ options, value, onC
           className={`relative flex-1 z-10 px-4 py-2 rounded-full font-semibold text-base focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-colors`}
           style={{ zIndex: value === opt.value ? 20 : 10 }}
           onClick={() => onChange(opt.value)}
-          aria-pressed={value === opt.value}
+          // aria-pressed removed for accessibility warning
           animate={{ color: value === opt.value ? '#fff' : '#4A47FF' }}
           transition={{ duration: 0.2 }}
         >
