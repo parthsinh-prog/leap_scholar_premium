@@ -3,11 +3,11 @@ import React, { useRef, useLayoutEffect, useState, useEffect, useMemo } from "re
 import { CheckCircle, Star, GraduationCap, ChevronDown, ChevronUp } from "lucide-react";
 import Image from "next/image";
 import { plansData, EuropeCountry, USProgram, Plan } from "../constants/plans";
-import { motion } from 'framer-motion';
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store";
 import { setRegion, setCountryOrProgram, setOpenFaqIndex, setMainSection, MainSection } from "../store/uiSlice";
 import SegmentedControl from '../components/SegmentedControl/SegmentedControl';
+import { motion } from "framer-motion";
 
 // France: What makes Leap Scholar different?
 const leapStatsFrance = [
@@ -556,38 +556,28 @@ export default function HomePage() {
         <div className="flex justify-center py-0">
           <div className="relative inline-flex gap-2">
             {/* Animated indicator for region selection */}
-            <motion.div
+            <div
               className="absolute top-0 bottom-0 rounded-full bg-primary z-0"
-              initial={false}
-              animate={{
-                left: regionIndicator.left,
-                width: regionIndicator.width,
-              }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               style={{ pointerEvents: 'none' }}
             />
-            <motion.button
+            <button
               ref={regionBtnRefs[0]}
               className={`relative z-10 px-8 py-3 rounded-full font-semibold shadow-md text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-colors`}
               style={{ zIndex: section === 'europe' ? 20 : 10 }}
               onClick={() => { dispatch(setRegion('europe')); }}
               aria-pressed={section === 'europe'}
-              animate={{ color: section === 'europe' ? '#fff' : '#4A47FF' }}
-              transition={{ duration: 0.2 }}
             >
               <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇪🇺</span> Europe
-            </motion.button>
-            <motion.button
+            </button>
+            <button
               ref={regionBtnRefs[1]}
               className={`relative z-10 px-8 py-3 rounded-full font-semibold shadow-md text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-colors`}
               style={{ zIndex: section === 'usa' ? 20 : 10 }}
               onClick={() => { dispatch(setRegion('usa')); }}
               aria-pressed={section === 'usa'}
-              animate={{ color: section === 'usa' ? '#fff' : '#4A47FF' }}
-              transition={{ duration: 0.2 }}
             >
               <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇺🇸</span> USA
-            </motion.button>
+            </button>
           </div>
         </div>
       </section>
@@ -617,29 +607,20 @@ export default function HomePage() {
               <div className="flex justify-center my-12">
                 <div className="relative inline-flex gap-5">
                   {/* Animated indicator for country/program selection */}
-                  <motion.div
+                  <div
                     className="absolute top-0 bottom-0 rounded-full bg-primary z-0"
-                    initial={false}
-                    animate={{
-                      left: optionIndicator.left,
-                      width: optionIndicator.width,
-                    }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     style={{ pointerEvents: 'none' }}
                   />
                   {options.map((option: { key: string; label: string }, idx: number) => (
-                    <motion.button
+                    <button
                       key={option.key}
                       ref={el => { optionBtnRefs.current[idx] = el; return undefined; }}
                       className={`relative z-10 px-8 py-3 rounded-full font-semibold shadow-md text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-colors`}
                       style={{ zIndex: countryOrProgram === option.key ? 20 : 10 }}
                       onClick={() => dispatch(setCountryOrProgram(option.key as EuropeCountry | USProgram))}
-                      // aria-pressed removed for accessibility warning
-                      animate={{ color: countryOrProgram === option.key ? '#fff' : '#4A47FF' }}
-                      transition={{ duration: 0.2 }}
                     >
                       {option.label}
-                    </motion.button>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -783,89 +764,47 @@ export default function HomePage() {
 
           {/* Journey Section - Smart Animated Zig-Zag Stepper */}
           <section className="py-20 px-4 bg-gradient-to-br from-gray-50 to-background">
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-4xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-16 text-gray-900 font-heading">
                 Your study abroad journey with Leap Scholar
               </h2>
-              <div className="relative flex flex-col items-center">
-                {/* Animated SVG line with pulse dot */}
-                <motion.svg
-                  className="hidden md:block absolute left-0 right-0 top-20 w-full h-48 z-0"
-                  viewBox="0 0 1200 192"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, amount: 0.2 }}
-                >
-                  <motion.path
-                    d="M 80 96 Q 200 0 400 96 Q 600 0 800 96 Q 1000 192 1120 96"
-                    stroke="#5B5FE3"
-                    strokeWidth="3"
-                    fill="none"
-                    variants={{
-                      hidden: { pathLength: 0 },
-                      visible: { pathLength: 1, transition: { duration: 1.2, ease: 'easeInOut' } },
-                    }}
-                    initial="hidden"
-                    animate="visible"
-                  />
-                  {/* Pulse dot animation */}
-                  <motion.circle
-                    r="10"
-                    fill="#5B5FE3"
-                    initial={{ cx: 80, cy: 96, opacity: 0 }}
-                    animate={{
-                      cx: [80, 200, 400, 600, 800, 1000, 1120],
-                      cy: [96, 0, 96, 0, 96, 192, 96],
-                      opacity: [0, 1, 1, 1, 1, 1, 0],
-                    }}
-                    transition={{ duration: 1.2, ease: 'easeInOut', repeat: Infinity, repeatDelay: 1 }}
-                  />
-                </motion.svg>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full z-10">
+              <div className="relative">
+                <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-primary/20 z-0" style={{ transform: 'translateX(-50%)' }} />
+                <div className="flex flex-col gap-16">
                   {steps.map((step, idx) => (
                     <motion.div
                       key={idx}
-                      className={`flex flex-col items-center relative ${idx % 2 === 1 ? 'md:mt-24' : ''}`}
                       initial={{ opacity: 0, y: 40 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.2 }}
-                      transition={{ duration: 0.7, ease: 'easeOut', delay: idx * 0.15 }}
+                      viewport={{ once: true, amount: 0.3 }}
+                      transition={{ duration: 0.6, delay: idx * 0.1 }}
+                      className="relative flex items-start"
                     >
-                      <motion.div
-                        className="bg-white border-4 border-primary rounded-full w-20 h-20 flex items-center justify-center mb-2 shadow-lg z-20"
-                        initial={{ scale: 0.7, opacity: 0 }}
-                        whileInView={{ scale: 1, opacity: 1 }}
-                        whileHover={{ scale: 1.08, boxShadow: '0 8px 32px rgba(91,95,227,0.15)' }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.1 + idx * 0.1 }}
-                        viewport={{ once: true, amount: 0.2 }}
-                      >
-                        {/* Icon for each step */}
-                        {idx === 0 && <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 20v-6m0 0V4m0 10l-3-3m3 3l3-3" /></svg>}
-                        {idx === 1 && <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M16 3v4M8 3v4" /></svg>}
-                        {idx === 2 && <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 20h9" /><path d="M12 4v16" /><path d="M3 20h9" /></svg>}
-                        {idx === 3 && <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>}
-                      </motion.div>
-                      <div className="bg-white rounded-xl shadow-md px-4 py-2 mb-6 -mt-2">
-                        <h3 className="text-lg md:text-xl font-bold text-center font-heading text-gray-900 whitespace-normal">
-                          {step.title}
-                        </h3>
+                      {/* Left: Step number and short statement */}
+                      <div className="flex flex-col items-end w-1/3 pr-8 text-right">
+                        <div className="flex items-center mb-2">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-xl shadow-lg border-4 ${idx === steps.length-1 ? 'bg-gradient-to-br from-[#5B5FE3] to-[#FF6B35] border-primary' : 'bg-primary border-primary/80'}`}>{idx+1}</div>
+                        </div>
+                        <div className="text-primary font-semibold text-base md:text-lg">
+                          {step.items[0]?.name}
+                        </div>
                       </div>
-                      <div className="flex flex-col gap-4 w-full">
-                        {step.items.map((item, itemIdx) => (
-                          <motion.div
-                            key={itemIdx}
-                            className={`bg-gray-100 rounded-xl p-4 shadow text-center mx-auto max-w-xs cursor-pointer ${itemIdx === 0 ? 'border-2 border-primary bg-white' : ''}`}
-                            whileHover={{ y: -8, boxShadow: '0 8px 32px rgba(91,95,227,0.10)' }}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.2 + itemIdx * 0.1 }}
-                          >
-                            <div className="font-semibold text-primary mb-1">{item.name}</div>
-                            <div className="text-gray-600 text-sm font-body">{item.description}</div>
-                          </motion.div>
-                        ))}
+                      {/* Center: Timeline connector */}
+                      <div className="flex flex-col items-center w-0 relative z-10">
+                        <div className={`w-4 h-4 rounded-full border-4 ${idx === steps.length-1 ? 'bg-gradient-to-br from-[#5B5FE3] to-[#FF6B35] border-primary' : 'bg-primary border-primary/80'}`}></div>
+                        {idx < steps.length-1 && <div className="w-1 h-24 bg-primary/20" />}
+                      </div>
+                      {/* Right: Detailed description */}
+                      <div className="flex-1 pl-8">
+                        <div className="bg-white rounded-xl shadow-lg p-6 border border-primary/10">
+                          <h3 className="font-bold text-lg mb-2 text-primary">{step.title}</h3>
+                          {step.items.map((item, i) => (
+                            <div key={i} className="mb-1">
+                              <div className="font-semibold text-primary">{item.name}</div>
+                              <div className="text-gray-600 text-sm font-body whitespace-pre-line">{item.description}</div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </motion.div>
                   ))}
