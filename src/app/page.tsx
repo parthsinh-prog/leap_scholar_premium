@@ -1,11 +1,11 @@
 "use client";
 import React, { useRef, useLayoutEffect, useState, useEffect, useMemo } from "react";
-import { CheckCircle, Star, GraduationCap, ChevronDown, ChevronUp, ChartNoAxesColumnIncreasingIcon } from "lucide-react";
+import { CheckCircle, Star, GraduationCap, ChevronDown, ChevronUp } from "lucide-react";
 import { plansData, EuropeCountry, USProgram, Plan } from "../constants/plans";
 import { motion } from 'framer-motion';
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store";
-import { setRegion, setCountryOrProgram, setOpenFaqIndex, setMainSection } from "../store/uiSlice";
+import { setRegion, setCountryOrProgram, setOpenFaqIndex, setMainSection, MainSection } from "../store/uiSlice";
 import SegmentedControl from '../components/SegmentedControl/SegmentedControl';
 
 // France: What makes Leap Scholar different?
@@ -418,16 +418,15 @@ export default function HomePage() {
     }
   }, [section]);
 
-  let options: { key: string; label: string }[] = [];
+  // Wrap options in useMemo to avoid recreating on every render
+  const options = useMemo<{ key: string; label: string }[]>(() => Object.entries(countryLabels).map(([key, label]) => ({ key, label })), []);
   let plans: Plan[] = [];
 
   if (section === "europe") {
-    options = Object.entries(countryLabels).map(([key, label]) => ({ key, label }));
     if (countryOrProgram && countryOrProgram in plansData.europe) {
       plans = plansData.europe[countryOrProgram as EuropeCountry]?.plans || [];
     }
   } else if (section === "usa") {
-    options = Object.entries(programLabels).map(([key, label]) => ({ key, label }));
     if (countryOrProgram === 'ug') {
       plans = plansData.usa['ug']?.plans || [];
     } else if (countryOrProgram === 'mba') {
@@ -450,7 +449,7 @@ export default function HomePage() {
         setOptionIndicator({ left: newLeft, width: newWidth });
       }
     }
-  }, [countryOrProgram, options, optionIndicator.left, optionIndicator.width, optionBtnRefs]);
+  }, [countryOrProgram, options, optionIndicator.left, optionIndicator.width, optionBtnRefs, regionBtnRefs]);
 
   // Only show one set of three buttons for USA: UG, MBA, MS
   // const usaPrograms = [
@@ -562,7 +561,7 @@ export default function HomePage() {
             { label: 'FAQs', value: 'faqs' },
           ]}
           value={mainSection}
-          onChange={(val) => dispatch(setMainSection(val as EuropeCountry | USProgram))}
+          onChange={(val) => dispatch(setMainSection(val as MainSection))}
         />
       </div>
       {/* Main Content Sections */}
@@ -588,7 +587,7 @@ export default function HomePage() {
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     style={{ pointerEvents: 'none' }}
                   />
-                  {options.map((option, idx) => (
+                  {options.map((option: { key: string; label: string }, idx: number) => (
                     <motion.button
                       key={option.key}
                       ref={el => { optionBtnRefs.current[idx] = el; return undefined; }}
