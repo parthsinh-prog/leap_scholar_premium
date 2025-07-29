@@ -513,6 +513,9 @@ export default function HomePage() {
     }
   }, [section]);
 
+  // Calculate the number of plans for the current selection
+  const numPlans = plans.length;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-white">
       {/* Hero Section */}
@@ -614,7 +617,18 @@ export default function HomePage() {
                 </div>
               </div>
               {/* Plans Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full">
+              <div
+                className={`grid gap-8 w-full justify-center items-stretch mx-auto ${
+                  numPlans === 4
+                    ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+                    : numPlans === 3
+                    ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3'
+                    : numPlans === 2
+                    ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2'
+                    : 'grid-cols-1'
+                }`}
+                style={{ maxWidth: numPlans === 4 ? '1200px' : numPlans === 3 ? '900px' : '600px' }}
+              >
                 {plans.map((plan, index) => (
                   <div
                     key={plan.tier + index}
