@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useLayoutEffect, useState, useEffect, useMemo } from "react";
 import { CheckCircle, Star, GraduationCap, ChevronDown, ChevronUp } from "lucide-react";
+import Image from "next/image";
 import { plansData, EuropeCountry, USProgram, Plan } from "../constants/plans";
 import { motion } from 'framer-motion';
 import { useSelector, useDispatch } from "react-redux";
@@ -214,7 +215,12 @@ const faqsRestOfEurope = [
   },
 ];
 
-const investors = ["Investor 1", "Investor 2", "Investor 3", "Investor 4"];
+const investors = [
+  { name: "Sequoia Capital India", img: "/sequoia_leap.webp" },
+  { name: "Owl Ventures", img: "/owl_leap.webp" },
+  { name: "Jungle Ventures", img: "/Jungle_leap.webp" },
+  { name: "Harvard Management Company", img: "/Harvard_leap.webp" },
+];
 
 const countryLabels: Record<EuropeCountry, string> = {
   germany: "🇩🇪 Germany",
@@ -862,10 +868,13 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold mb-8 text-gray-900 font-heading">
             Trusted and backed by marquee global investors
           </h2>
-          <div className="flex justify-center items-center space-x-8 opacity-60">
+          <div className="flex flex-wrap justify-center items-center gap-8 opacity-80">
             {investors.map((inv, idx) => (
-              <div key={idx} className="w-32 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
-                <span className="text-gray-500 font-semibold">{inv}</span>
+              <div key={idx} className="flex flex-col items-center w-36">
+                <div className="w-32 h-16 flex items-center justify-center mb-2">
+                  <Image src={inv.img} alt={inv.name} width={128} height={64} className="object-contain" />
+                </div>
+                <span className="text-xs text-gray-500 font-semibold text-center leading-tight">{inv.name}</span>
               </div>
             ))}
           </div>
