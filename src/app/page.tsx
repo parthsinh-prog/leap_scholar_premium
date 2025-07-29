@@ -221,11 +221,6 @@ const countryLabels: Record<EuropeCountry, string> = {
   france: "🇫🇷 France",
   "rest-of-europe": "🇪🇺 Rest of Europe",
 };
-const programLabels: Record<USProgram, string> = {
-  ug: "UG",
-  mba: "MBA",
-  ms: "MS",
-};
 
 // Germany: What makes Leap Scholar different?
 const leapStatsGermany = [
@@ -658,7 +653,7 @@ export default function HomePage() {
                       <div className="bg-gray-50 rounded-lg p-4 mb-6 w-full">
                         <h4 className="font-semibold text-primary mb-2">Credits Worth ₹{plan.creditTotal.toLocaleString("en-IN")}</h4>
                         <ul className="space-y-1">
-                          {Object.entries(plan.creditBreakdown).map(([key, value], idx) =>
+                          {Object.entries(plan.creditBreakdown).map(([key, value]) =>
                             value ? (
                               <li key={key} className="text-sm text-gray-600">• {key.replace(/([A-Z])/g, " $1")}: ₹{value.toLocaleString("en-IN")}</li>
                             ) : null
@@ -719,7 +714,7 @@ export default function HomePage() {
                         <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                       ))}
                     </div>
-                    <p className="text-gray-700 mb-4 italic">"{testimonial.text}"</p>
+                    <p className="text-gray-700 mb-4 italic">{testimonial.text}</p>
                     <div className="border-t pt-4">
                       <p className="font-semibold text-gray-900">{testimonial.name}</p>
                       <p className="text-sm text-gray-600">{testimonial.university}</p>
