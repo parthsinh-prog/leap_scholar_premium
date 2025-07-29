@@ -420,7 +420,16 @@ export default function HomePage() {
   }, [section]);
 
   // Wrap options in useMemo to avoid recreating on every render
-  const options = useMemo<{ key: string; label: string }[]>(() => Object.entries(countryLabels).map(([key, label]) => ({ key, label })), []);
+  const programLabels: Record<USProgram, string> = {
+    ug: "UG",
+    mba: "MBA",
+    ms: "MS",
+  };
+  const options = useMemo<{ key: string; label: string }[]>(() => {
+    return section === 'europe'
+      ? Object.entries(countryLabels).map(([key, label]) => ({ key, label }))
+      : Object.entries(programLabels).map(([key, label]) => ({ key, label }));
+  }, [section]);
   let plans: Plan[] = [];
 
   if (section === "europe") {
@@ -605,7 +614,7 @@ export default function HomePage() {
                 </div>
               </div>
               {/* Plans Grid */}
-              <div className="flex flex-wrap justify-center gap-6 md:gap-12 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full">
                 {plans.map((plan, index) => (
                   <div
                     key={plan.tier + index}
