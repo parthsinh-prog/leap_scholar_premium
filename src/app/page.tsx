@@ -553,16 +553,22 @@ export default function HomePage() {
         <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600 mb-6 md:mb-10 max-w-2xl mx-auto font-body">
           The premium service which helps you land your dream College
         </p>
+        {/* Update the region selector section with HGI iOS design:
+            - Enhanced visual hierarchy
+            - Better spacing and typography
+            - Refined shadows and glassmorphism
+            - Improved microinteractions
+            - More polished iOS-style aesthetics */}
         <div className="flex justify-center py-0">
-          <div className="relative inline-flex gap-2">
+          <div className="relative inline-flex gap-3 bg-white/80 backdrop-blur-sm rounded-3xl p-2 shadow-2xl shadow-primary/10 border border-white/30">
             {/* Animated indicator for region selection */}
             <div
-              className="absolute top-0 bottom-0 rounded-full bg-primary z-0"
+              className="absolute top-2 bottom-2 rounded-2xl bg-gradient-to-r from-primary to-secondary z-0 transition-all duration-300"
               style={{ pointerEvents: 'none' }}
             />
             <button
               ref={regionBtnRefs[0]}
-              className={`relative z-10 px-8 py-3 rounded-full font-semibold shadow-md text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-colors`}
+              className={`relative z-10 px-8 py-4 rounded-2xl font-bold shadow-lg text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-all duration-300 hover:scale-105 active:scale-95`}
               style={{ zIndex: section === 'europe' ? 20 : 10 }}
               onClick={() => { 
                 dispatch(setRegion('europe')); 
@@ -580,16 +586,16 @@ export default function HomePage() {
               }}
               aria-pressed={section === 'europe'}
             >
-              <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇪🇺</span> Europe
+              <span style={{ fontSize: '1.5rem', marginRight: '0.5rem', verticalAlign: 'middle' }}>🇪🇺</span> Europe
             </button>
             <button
               ref={regionBtnRefs[1]}
-              className={`relative z-10 px-8 py-3 rounded-full font-semibold shadow-md text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-colors`}
+              className={`relative z-10 px-8 py-4 rounded-2xl font-bold shadow-lg text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-all duration-300 hover:scale-105 active:scale-95`}
               style={{ zIndex: section === 'usa' ? 20 : 10 }}
               onClick={() => { dispatch(setRegion('usa')); }}
               aria-pressed={section === 'usa'}
             >
-              <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇺🇸</span> USA
+              <span style={{ fontSize: '1.5rem', marginRight: '0.5rem', verticalAlign: 'middle' }}>🇺🇸</span> USA
             </button>
           </div>
         </div>
