@@ -15,7 +15,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur shadow-2xl rounded-b-3xl border-b border-primary/10">
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur shadow-2xl rounded-b-3xl border-b border-primary/10 transition-all duration-300 [.header-reduced-shadow_&]:shadow-lg [.header-reduced-shadow_&]:bg-white/60">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4 md:py-6">
           <div className="flex items-center">
             <Image src="/leap_logo.png" alt="Leap Scholar Logo" width={160} height={40} />
