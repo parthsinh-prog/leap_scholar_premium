@@ -435,6 +435,68 @@ export default function HomePage() {
   const openFaq = useSelector<RootState, number | null>((state) => state.ui.openFaqIndex);
   const mainSection = useSelector<RootState, string>((state) => state.ui.mainSection);
 
+  // Add scroll tracking for header shadow adjustment
+  useEffect(() => {
+    const handleScroll = () => {
+      const countrySelector = document.querySelector('[data-section="country-selector"]') as HTMLElement;
+      if (countrySelector) {
+        const rect = countrySelector.getBoundingClientRect();
+        const isInCountrySelectorArea = rect.top <= 100 && rect.bottom >= 100;
+        
+        // Dispatch action to adjust header shadow based on scroll position
+        // This will be handled in the header component
+        if (isInCountrySelectorArea) {
+          // Add a class to body or dispatch action to reduce header shadow
+          document.body.classList.add('header-reduced-shadow');
+        } else {
+          document.body.classList.remove('header-reduced-shadow');
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Scroll to top when site loads
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  // Function to handle segmented control option clicks and scroll to respective sections
+  const handleSegmentedControlClick = (value: string) => {
+    setTimeout(() => {
+      let targetSection: string;
+      let headerOffset: number;
+      
+      switch (value) {
+        case 'plans':
+          targetSection = 'plans';
+          headerOffset = 120; // Increased offset for plans section to appear below header
+          break;
+        case 'testimonials':
+          targetSection = 'testimonials';
+          headerOffset = 80; // Standard header height
+          break;
+        case 'faqs':
+          targetSection = 'faqs';
+          headerOffset = 80; // Standard header height
+          break;
+        default:
+          return;
+      }
+      
+      const sectionElement = document.querySelector(`[data-section="${targetSection}"]`) as HTMLElement;
+      if (sectionElement) {
+        const elementTop = sectionElement.offsetTop;
+        window.scrollTo({
+          top: elementTop - headerOffset,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
+  };
+
   // --- Region Selector Animation State ---
   const regionBtnRefs = [useRef<HTMLButtonElement>(null), useRef<HTMLButtonElement>(null)];
   const [regionIndicator, setRegionIndicator] = useState({ left: 0, width: 0 });
@@ -611,19 +673,20 @@ export default function HomePage() {
           ]}
           value={mainSection}
           onChange={(val) => dispatch(setMainSection(val as MainSection))}
+          onOptionClick={handleSegmentedControlClick}
         />
       </div>
       {/* Main Content Sections */}
       {mainSection === 'plans' && (
         <>
           {/* Plan Selection */}
-          <section className="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50/50 to-white">
+          <section className="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50/50 to-white" data-section="plans">
             <div className="max-w-7xl mx-auto flex flex-col items-center">
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center mb-8 md:mb-12 tracking-tight text-gray-900 font-heading">
                 {section === 'europe' ? 'Choose your destination country' : 'Choose your program'}
               </h2>
               {/* Country/Program Selector (Europe/USA) */}
-              <div className="flex justify-center my-12">
+              <div className="flex justify-center my-12" data-section="country-selector">
                 <div className="relative inline-flex gap-5">
                   {/* Animated indicator for country/program selection */}
                   <div
@@ -636,7 +699,21 @@ export default function HomePage() {
                       ref={el => { optionBtnRefs.current[idx] = el; return undefined; }}
                       className={`relative z-10 px-8 py-4 rounded-2xl font-bold shadow-lg text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-all duration-300 hover:scale-105 active:scale-95`}
                       style={{ zIndex: countryOrProgram === option.key ? 20 : 10 }}
-                      onClick={() => dispatch(setCountryOrProgram(option.key as EuropeCountry | USProgram))}
+                      onClick={() => {
+                        dispatch(setCountryOrProgram(option.key as EuropeCountry | USProgram));
+                        // Scroll to country/course selector area when country/course is selected
+                        setTimeout(() => {
+                          const countrySelector = document.querySelector('[data-section="country-selector"]') as HTMLElement;
+                          if (countrySelector) {
+                            const headerHeight = 80; // Approximate header height
+                            const elementTop = countrySelector.offsetTop;
+                            window.scrollTo({
+                              top: elementTop - headerHeight,
+                              behavior: 'smooth'
+                            });
+                          }
+                        }, 100);
+                      }}
                     >
                       {option.label}
                     </button>
@@ -768,7 +845,7 @@ export default function HomePage() {
       {mainSection === 'testimonials' && (
         <>
           {/* Testimonials */}
-          <section className="py-16 px-4 bg-white">
+          <section className="py-16 px-4 bg-white" data-section="testimonials">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 font-heading">
                 See why our students ❤ us
@@ -846,7 +923,7 @@ export default function HomePage() {
       {mainSection === 'faqs' && (
         <>
           {/* FAQ Section (Accordion) */}
-          <section className="py-16 px-4 bg-gradient-to-br from-background to-secondary/10">
+          <section className="py-16 px-4 bg-gradient-to-br from-background to-secondary/10" data-section="faqs">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 font-heading">
                 Got questions? Find your answers here
