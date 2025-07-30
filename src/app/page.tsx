@@ -564,7 +564,20 @@ export default function HomePage() {
               ref={regionBtnRefs[0]}
               className={`relative z-10 px-8 py-3 rounded-full font-semibold shadow-md text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-colors`}
               style={{ zIndex: section === 'europe' ? 20 : 10 }}
-              onClick={() => { dispatch(setRegion('europe')); }}
+              onClick={() => { 
+                dispatch(setRegion('europe')); 
+                // Scroll to segmented control even if Europe is already selected
+                setTimeout(() => {
+                  if (segmentedControlRef.current) {
+                    const headerHeight = 80; // Approximate header height
+                    const elementTop = segmentedControlRef.current.offsetTop;
+                    window.scrollTo({
+                      top: elementTop - headerHeight,
+                      behavior: 'smooth'
+                    });
+                  }
+                }, 100);
+              }}
               aria-pressed={section === 'europe'}
             >
               <span style={{ fontSize: '1.5rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>🇪🇺</span> Europe
@@ -598,9 +611,9 @@ export default function HomePage() {
       {mainSection === 'plans' && (
         <>
           {/* Plan Selection */}
-          <section className="py-10 md:py-20 px-2 sm:px-4 lg:px-8 bg-white">
+          <section className="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50/50 to-white">
             <div className="max-w-7xl mx-auto flex flex-col items-center">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-center mb-8 md:mb-12 tracking-tight text-gray-900 font-heading">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center mb-8 md:mb-12 tracking-tight text-gray-900 font-heading">
                 {section === 'europe' ? 'Choose your destination country' : 'Choose your program'}
               </h2>
               {/* Country/Program Selector (Europe/USA) */}
@@ -615,7 +628,7 @@ export default function HomePage() {
                     <button
                       key={option.key}
                       ref={el => { optionBtnRefs.current[idx] = el; return undefined; }}
-                      className={`relative z-10 px-8 py-3 rounded-full font-semibold shadow-md text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-colors`}
+                      className={`relative z-10 px-8 py-4 rounded-2xl font-bold shadow-lg text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-all duration-300 hover:scale-105 active:scale-95`}
                       style={{ zIndex: countryOrProgram === option.key ? 20 : 10 }}
                       onClick={() => dispatch(setCountryOrProgram(option.key as EuropeCountry | USProgram))}
                     >
@@ -640,74 +653,85 @@ export default function HomePage() {
                 {plans.map((plan, index) => (
                   <div
                     key={plan.tier + index}
-                    className={`relative bg-white/80 backdrop-blur rounded-3xl shadow-2xl shadow-primary/10 border border-primary/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/20 hover:scale-105 ${plan.tier === "LS Premium" ? "border-primary ring-4 ring-blue-100" : "border-gray-100"}`}
+                    className={`relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-primary/5 border border-white/30 transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl hover:shadow-primary/15 hover:scale-[1.02] group ${plan.tier === "LS Premium" ? "ring-4 ring-primary/20 bg-gradient-to-br from-white/95 to-primary/5" : "bg-white/95"}`}
                   >
                     {plan.tier === "LS Premium" && (
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 z-10 flex justify-center w-full">
-                        <span className="bg-primary text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg whitespace-nowrap">
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 flex justify-center w-full">
+                        <span className="bg-gradient-to-r from-primary to-secondary text-white px-6 py-2.5 rounded-full text-sm font-black shadow-xl whitespace-nowrap">
                           Most Popular
                         </span>
                       </div>
                     )}
-                    <div className="p-4 md:p-10 flex flex-col items-center">
-                      <div className="text-center mb-4 md:mb-8">
-                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-1 md:mb-2 font-heading">{plan.tier}</h3>
-                        <div className="flex flex-col items-center justify-center mb-1 md:mb-2">
-                          <span className="text-2xl md:text-4xl font-extrabold text-primary">₹{plan.priceRange[0].toLocaleString("en-IN")}</span>
-                          <span className="text-base md:text-lg text-gray-500 line-through mt-0.5">₹{plan.priceRange[1].toLocaleString("en-IN")}</span>
+                    <div className="p-6 md:p-8 flex flex-col items-center">
+                      <div className="text-center mb-6 md:mb-8">
+                        <h3 className="text-xl md:text-2xl font-black text-gray-900 mb-3 md:mb-4 font-heading tracking-tight">{plan.tier}</h3>
+                        <div className="flex flex-col items-center justify-center mb-2 md:mb-3">
+                          <span className="text-3xl md:text-5xl font-black text-primary tracking-tight">₹{plan.priceRange[0].toLocaleString("en-IN")}</span>
+                          <span className="text-base md:text-lg text-gray-400 line-through mt-1 font-medium">₹{plan.priceRange[1].toLocaleString("en-IN")}</span>
                         </div>
                       </div>
-                      <div className="space-y-2 md:space-y-4 mb-4 md:mb-8 w-full">
-                        <div className="flex items-start">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0" />
-                          <span className="text-gray-700">{plan.applications}</span>
+                      <div className="space-y-3 md:space-y-4 mb-6 md:mb-8 w-full">
+                        <div className="flex items-start group/item">
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <span className="text-gray-700 font-medium leading-relaxed">{plan.applications}</span>
                         </div>
-                        <div className="flex items-start">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0" />
-                          <span className="text-gray-700">{plan.counsellor}</span>
+                        <div className="flex items-start group/item">
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <span className="text-gray-700 font-medium leading-relaxed">{plan.counsellor}</span>
                         </div>
-                        <div className="flex items-start">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0" />
-                          <span className="text-gray-700">{plan.ielts}</span>
+                        <div className="flex items-start group/item">
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <span className="text-gray-700 font-medium leading-relaxed">{plan.ielts}</span>
                         </div>
-                        <div className="flex items-start">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0" />
-                          <span className="text-gray-700">{plan.sopLorSupport}</span>
+                        <div className="flex items-start group/item">
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <span className="text-gray-700 font-medium leading-relaxed">{plan.sopLorSupport}</span>
                         </div>
-                        <div className="flex items-start">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0" />
-                          <span className="text-gray-700">{plan.visaSupport}</span>
+                        <div className="flex items-start group/item">
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <span className="text-gray-700 font-medium leading-relaxed">{plan.visaSupport}</span>
                         </div>
-                        <div className="flex items-start">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0" />
-                          <span className="text-gray-700">{plan.scholarshipSupport}</span>
+                        <div className="flex items-start group/item">
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <span className="text-gray-700 font-medium leading-relaxed">{plan.scholarshipSupport}</span>
                         </div>
-                        <div className="flex items-start">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0" />
-                          <span className="text-gray-700">Accommodation Support: {plan.accommodationSupport ? "Yes" : "No"}</span>
+                        <div className="flex items-start group/item">
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <span className="text-gray-700 font-medium leading-relaxed">Accommodation Support: {plan.accommodationSupport ? "Yes" : "No"}</span>
                         </div>
                       </div>
-                      <div className="bg-gray-50 rounded-lg p-4 mb-6 w-full">
-                        <h4 className="font-semibold text-primary mb-2">Credits Worth ₹{plan.creditTotal.toLocaleString("en-IN")}</h4>
-                        <ul className="space-y-1">
+                      <div className="bg-gradient-to-br from-gray-50/80 to-white/60 backdrop-blur-sm rounded-2xl p-5 mb-6 w-full border border-gray-100/50">
+                        <h4 className="font-black text-primary mb-3 text-lg">Credits Worth ₹{plan.creditTotal.toLocaleString("en-IN")}</h4>
+                        <ul className="space-y-2">
                           {Object.entries(plan.creditBreakdown).map(([key, value]) =>
                             value ? (
-                              <li key={key} className="text-sm text-gray-600">• {key.replace(/([A-Z])/g, " $1")}: ₹{value.toLocaleString("en-IN")}</li>
+                              <li key={key} className="text-sm text-gray-600 font-medium flex items-center">
+                                <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></div>
+                                {key.replace(/([A-Z])/g, " $1")}: ₹{value.toLocaleString("en-IN")}
+                              </li>
                             ) : null
                           )}
                         </ul>
                       </div>
                       {plan.addOns && (
                         <div className="mb-6 w-full">
-                          <h4 className="font-semibold text-primary mb-2">Available add-ons:</h4>
-                          <ul className="space-y-1">
-                            {plan.addOns.map((addon, idx) => (
-                              <li key={idx} className="text-sm text-gray-600">• {addon}</li>
-                            ))}
-                          </ul>
+                          <div className="bg-gradient-to-br from-blue-50/60 to-indigo-50/40 backdrop-blur-sm rounded-2xl p-5 border border-blue-100/50">
+                            <h4 className="font-black text-primary mb-3 text-lg flex items-center">
+                              <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
+                              Available add-ons
+                            </h4>
+                            <ul className="space-y-2">
+                              {plan.addOns.map((addon, idx) => (
+                                <li key={idx} className="text-sm text-gray-700 font-medium flex items-center">
+                                  <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></div>
+                                  {addon}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         </div>
                       )}
-                      <button className={`w-full py-4 px-6 rounded-full font-semibold text-lg transition-all duration-300 mt-2 shadow-md hover:shadow-xl hover:scale-105 active:scale-95 ${plan.tier === "LS Premium" ? "bg-primary text-white hover:bg-secondary" : "bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white"}`}>
+                      <button className={`w-full py-4 px-8 rounded-2xl font-black text-lg transition-all duration-300 mt-4 shadow-lg hover:shadow-xl active:scale-95 ${plan.tier === "LS Premium" ? "bg-gradient-to-r from-primary to-secondary text-white hover:from-secondary hover:to-primary shadow-primary/25" : "bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white shadow-primary/10"}`}>
                         Enrol Now
                       </button>
                     </div>
