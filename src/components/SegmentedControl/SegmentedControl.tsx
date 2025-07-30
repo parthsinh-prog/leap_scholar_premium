@@ -6,9 +6,10 @@ interface SegmentedControlProps {
   options: { label: string; value: string }[];
   value: string;
   onChange: (value: string) => void;
+  onOptionClick?: (value: string) => void; // Add optional callback for scroll functionality
 }
 
-const SegmentedControl: React.FC<SegmentedControlProps> = ({ options, value, onChange }) => {
+const SegmentedControl: React.FC<SegmentedControlProps> = ({ options, value, onChange, onOptionClick }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
@@ -45,7 +46,10 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({ options, value, onC
           ref={el => { btnRefs.current[idx] = el; return undefined; }}
           className={`relative flex-1 z-10 px-4 py-2 rounded-full font-semibold text-base focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-colors`}
           style={{ zIndex: value === opt.value ? 20 : 10 }}
-          onClick={() => onChange(opt.value)}
+          onClick={() => {
+            onChange(opt.value);
+            onOptionClick?.(opt.value); // Call the optional scroll callback
+          }}
           // aria-pressed removed for accessibility warning
           animate={{ color: value === opt.value ? '#fff' : '#4A47FF' }}
           transition={{ duration: 0.2 }}
