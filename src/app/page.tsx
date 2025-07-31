@@ -957,38 +957,58 @@ export default function HomePage() {
           </section>
         </>
       )}
+
       {mainSection === 'faqs' && (
         <>
-          {/* FAQ Section (Accordion) */}
-          <section className="py-16 px-4 bg-gradient-to-br from-background to-secondary/10" data-section="faqs">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 font-heading">
-                Got questions? Find your answers here
+          {/* FAQ Section - HGI iOS Glassmorphism Accordion */}
+          <section className="py-16 px-4 bg-gradient-to-br from-[#F4F3FF] to-white/80" data-section="faqs">
+            <div className="max-w-3xl mx-auto">
+              <h2 className="text-4xl font-extrabold text-center mb-14 text-gray-900 font-heading tracking-tight drop-shadow-sm">
+                Got questions? <span className="bg-gradient-to-r from-[#443EFF] to-[#FF6B35] bg-clip-text text-transparent">Find your answers here</span>
               </h2>
-              <div className="space-y-6">
-                {faqs.map((faq, index) => (
-                  <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300">
-                    <button
-                      className="w-full flex justify-between items-center p-6 text-left focus:outline-none hover:bg-gray-50 transition"
-                      onClick={() => dispatch(setOpenFaqIndex(openFaq === index ? null : index))}
-                      aria-expanded={openFaq === index}
-                      aria-controls={`faq-panel-${index}`}
-                    >
-                      <span className="text-lg font-semibold text-gray-900 font-heading">{faq.question}</span>
-                      {openFaq === index ? (
-                        <ChevronUp className="w-6 h-6 text-primary" />
-                      ) : (
-                        <ChevronDown className="w-6 h-6 text-primary" />
-                      )}
-                    </button>
+              <div className="space-y-7">
+                {faqs.map((faq, index) => {
+                  const isOpen = openFaq === index;
+                  return (
                     <div
-                      id={`faq-panel-${index}`}
-                      className={`px-6 pb-6 text-gray-600 font-body transition-all duration-300 ${openFaq === index ? 'block' : 'hidden'}`}
+                      key={index}
+                      className={`relative rounded-3xl border border-gray-100/60 bg-white/80 backdrop-blur-xl shadow-2xl shadow-primary/10 transition-all duration-400 overflow-hidden ${isOpen ? 'ring-2 ring-primary/20' : ''}`}
                     >
-                      {faq.answer}
+                      <button
+                        className={`w-full flex justify-between items-center px-7 py-6 text-left focus:outline-none transition-all duration-300 font-heading text-lg font-bold text-gray-900 hover:bg-primary/5 active:scale-[0.98]`}
+                        onClick={() => dispatch(setOpenFaqIndex(isOpen ? null : index))}
+                        aria-expanded={isOpen}
+                        aria-controls={`faq-panel-${index}`}
+                        style={{ WebkitTapHighlightColor: 'transparent' }}
+                      >
+                        <span className="flex-1 text-left leading-snug">{faq.question}</span>
+                        <span className="ml-4 flex items-center justify-center">
+                          {isOpen ? (
+                            <ChevronUp className="w-7 h-7 text-[#443EFF] transition-transform duration-300" />
+                          ) : (
+                            <ChevronDown className="w-7 h-7 text-[#443EFF] transition-transform duration-300" />
+                          )}
+                        </span>
+                      </button>
+                      <div
+                        id={`faq-panel-${index}`}
+                        className={`px-7 pb-7 text-gray-700 font-body text-base transition-all duration-400 ease-in-out ${isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}
+                        style={{
+                          transitionProperty: 'max-height, opacity',
+                        }}
+                        aria-hidden={!isOpen}
+                      >
+                        <div className="pt-2 whitespace-pre-line break-words">
+                          {faq.answer}
+                        </div>
+                      </div>
+                      {/* Animated border indicator for open state */}
+                      {isOpen && (
+                        <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-[#443EFF] to-[#FF6B35] animate-fadeIn" />
+                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </section>
