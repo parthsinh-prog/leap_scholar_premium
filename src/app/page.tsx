@@ -428,6 +428,62 @@ const testimonialsUSAMS = [
   },
 ];
 
+
+// --- Auto-scrolling Testimonials Carousel ---
+function AutoScrollTestimonials({ testimonials }: { testimonials: { name: string; university: string; text: string }[] }) {
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    let scrollAmount = 0;
+    let frameId: number;
+    const speed = 0.5; // px per frame
+    function animate() {
+      if (container.scrollWidth - container.clientWidth > 0) {
+        scrollAmount += speed;
+        if (scrollAmount >= container.scrollWidth - container.clientWidth) {
+          scrollAmount = 0;
+        }
+        container.scrollLeft = scrollAmount;
+      }
+      frameId = requestAnimationFrame(animate);
+    }
+    frameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frameId);
+  }, [testimonials]);
+
+  // Duplicate testimonials for seamless loop
+  const items = [...testimonials, ...testimonials];
+
+  return (
+    <div
+      ref={scrollRef}
+      className="flex gap-8 overflow-x-auto no-scrollbar py-2 px-1 justify-center items-center"
+      style={{ scrollBehavior: 'auto', whiteSpace: 'nowrap' }}
+    >
+      {items.map((testimonial, idx) => (
+        <div
+          key={idx}
+          className="min-w-[320px] max-w-xs bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl shadow-primary/10 border border-white/30 p-8 flex flex-col items-center justify-center transition-all duration-500 hover:-translate-y-2 hover:shadow-3xl hover:shadow-primary/15 hover:scale-[1.03] flex-shrink-0"
+        >
+          <div className="flex items-center mb-4 justify-center">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+            ))}
+          </div>
+          <p className="text-gray-700 mb-4 italic text-center text-lg font-body leading-relaxed break-words whitespace-pre-line w-full">
+            {testimonial.text}
+          </p>
+          <div className="border-t pt-4 w-full flex flex-col items-center">
+            <p className="font-semibold text-gray-900 text-center text-base font-heading mb-1">{testimonial.name}</p>
+            <p className="text-sm text-gray-500 text-center font-body">{testimonial.university}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function HomePage() {
   const dispatch = useDispatch();
   const section = useSelector<RootState, string>((state) => state.ui.region);
@@ -647,8 +703,8 @@ export default function HomePage() {
               ref={regionBtnRefs[0]}
               className={`px-6 py-3 rounded-xl font-semibold text-base focus:outline-none transition-colors duration-200
                 ${section === 'europe'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-blue-600'}
+                  ? 'bg-[#443EFF] text-white'
+                  : 'bg-gray-100 text-[#443EFF]'}
               `}
               onClick={() => { 
                 dispatch(setRegion('europe')); 
@@ -671,8 +727,8 @@ export default function HomePage() {
               ref={regionBtnRefs[1]}
               className={`px-6 py-3 rounded-xl font-semibold text-base focus:outline-none transition-colors duration-200
                 ${section === 'usa'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-blue-600'}
+                  ? 'bg-[#443EFF] text-white'
+                  : 'bg-gray-100 text-[#443EFF]'}
               `}
               onClick={() => { dispatch(setRegion('usa')); }}
               aria-pressed={section === 'usa'}
@@ -714,8 +770,8 @@ export default function HomePage() {
                       ref={el => { optionBtnRefs.current[idx] = el; return undefined; }}
                       className={`px-6 py-3 rounded-xl font-semibold text-base focus:outline-none transition-colors duration-200
                         ${countryOrProgram === option.key
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-blue-600'}
+                          ? 'bg-[#443EFF] text-white'
+                          : 'bg-gray-100 text-[#443EFF]'}
                       `}
                       onClick={() => {
                         dispatch(setCountryOrProgram(option.key as EuropeCountry | USProgram));
@@ -793,11 +849,11 @@ export default function HomePage() {
                           <span className="text-gray-700 font-medium leading-relaxed">{plan.visaSupport}</span>
                         </div>
                         <div className="flex items-start group/item">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover:item:scale-110 transition-transform duration-200" />
                           <span className="text-gray-700 font-medium leading-relaxed">{plan.scholarshipSupport}</span>
                         </div>
                         <div className="flex items-start group/item">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover:item:scale-110 transition-transform duration-200" />
                           <span className="text-gray-700 font-medium leading-relaxed">Accommodation Support: {plan.accommodationSupport ? "Yes" : "No"}</span>
                         </div>
                       </div>
@@ -888,77 +944,14 @@ export default function HomePage() {
       )}
       {mainSection === 'testimonials' && (
         <>
-          {/* Testimonials */}
+          {/* Testimonials - Auto-scrolling Carousel */}
           <section className="py-16 px-4 bg-white" data-section="testimonials">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 font-heading">
                 See why our students ❤ us
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {testimonials.map((testimonial: { name: string; university: string; text: string }, index: number) => (
-                  <div key={index} className="bg-white/80 backdrop-blur rounded-3xl shadow-2xl shadow-primary/10 border border-primary/10 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/20 hover:scale-105">
-                    <div className="flex items-center mb-4">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-gray-700 mb-4 italic">{testimonial.text}</p>
-                    <div className="border-t pt-4">
-                      <p className="font-semibold text-gray-900">{testimonial.name}</p>
-                      <p className="text-sm text-gray-600">{testimonial.university}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Journey Section - Smart Animated Zig-Zag Stepper */}
-          <section className="py-20 px-4 bg-gradient-to-br from-gray-50 to-background">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-16 text-gray-900 font-heading">
-                Your study abroad journey with Leap Scholar
-              </h2>
               <div className="relative">
-                <div className="flex flex-col gap-16">
-                  {steps.map((step, idx) => (
-                    <motion.div
-                      key={idx}
-                      initial={{ opacity: 0, y: 40 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: false, amount: 0.3 }}
-                      transition={{ duration: 0.6, delay: idx * 0.1 }}
-                      className="relative flex items-start"
-                    >
-                      {/* Left: Step number and short statement */}
-                      <div className="flex flex-col items-end w-1/3 pr-8 text-right">
-                        <div className="flex items-center mb-2">
-                          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-xl shadow-lg border-4 ${idx === steps.length-1 ? 'bg-gradient-to-br from-[#5B5FE3] to-[#FF6B35] border-primary' : 'bg-primary border-primary/80'}`}>{idx+1}</div>
-                        </div>
-                        <div className="text-primary font-semibold text-base md:text-lg">
-                          {step.items[0]?.name}
-                        </div>
-                      </div>
-                      {/* Center: Timeline connector */}
-                      <div className="flex flex-col items-center w-0 relative z-10">
-                        <div className={`w-4 h-4 rounded-full border-4 ${idx === steps.length-1 ? 'bg-gradient-to-br from-[#5B5FE3] to-[#FF6B35] border-primary' : 'bg-primary border-primary/80'}`}></div>
-                        {idx < steps.length-1 && <div className="w-1 h-24 bg-primary/20" />}
-                      </div>
-                      {/* Right: Detailed description */}
-                      <div className="flex-1 pl-8">
-                        <div className="bg-white rounded-xl shadow-lg p-6 border border-primary/10">
-                          <h3 className="font-bold text-lg mb-2 text-primary">{step.title}</h3>
-                          {step.items.map((item, i) => (
-                            <div key={i} className="mb-1">
-                              <div className="font-semibold text-primary">{item.name}</div>
-                              <div className="text-gray-600 text-sm font-body whitespace-pre-line">{item.description}</div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                <AutoScrollTestimonials testimonials={testimonials} />
               </div>
             </div>
           </section>
