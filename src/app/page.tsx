@@ -865,7 +865,7 @@ export default function HomePage() {
                               <li key={key} className="text-sm text-gray-600 font-medium flex items-center">
                                 <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></div>
                                 {key.replace(/([A-Z])/g, " $1")}: ₹{value.toLocaleString("en-IN")}
-                              </li>
+          </li>
                             ) : null
                           )}
                         </ul>
@@ -953,7 +953,7 @@ export default function HomePage() {
               <div className="relative">
                 <AutoScrollTestimonials testimonials={testimonials} />
               </div>
-            </div>
+        </div>
           </section>
         </>
       )}
