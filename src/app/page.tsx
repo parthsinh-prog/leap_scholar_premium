@@ -504,7 +504,8 @@ export default function HomePage() {
     const idx = section === 'europe' ? 0 : 1;
     const btn = regionBtnRefs[idx].current;
     if (btn) {
-      setRegionIndicator({ left: btn.offsetLeft, width: btn.offsetWidth });
+      // Account for the container's padding (p-2 = 8px)
+      setRegionIndicator({ left: btn.offsetLeft - 8, width: btn.offsetWidth });
     }
   }, [section]);
 
@@ -622,22 +623,19 @@ export default function HomePage() {
             - Improved microinteractions
             - More polished iOS-style aesthetics */}
         <div className="flex justify-center py-0">
-          <div className="relative inline-flex gap-3 bg-white/80 backdrop-blur-sm rounded-3xl p-2 shadow-2xl shadow-primary/10 border border-white/30">
-            {/* Animated indicator for region selection */}
-            <div
-              className="absolute top-2 bottom-2 rounded-2xl bg-gradient-to-r from-primary to-secondary z-0 transition-all duration-300"
-              style={{ pointerEvents: 'none' }}
-            />
+          <div className="inline-flex gap-2 bg-transparent rounded-xl p-1">
             <button
               ref={regionBtnRefs[0]}
-              className={`relative z-10 px-8 py-4 rounded-2xl font-bold shadow-lg text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-all duration-300 hover:scale-105 active:scale-95`}
-              style={{ zIndex: section === 'europe' ? 20 : 10 }}
+              className={`px-6 py-3 rounded-xl font-semibold text-base focus:outline-none transition-colors duration-200
+                ${section === 'europe'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-blue-600'}
+              `}
               onClick={() => { 
                 dispatch(setRegion('europe')); 
-                // Scroll to segmented control even if Europe is already selected
                 setTimeout(() => {
                   if (segmentedControlRef.current) {
-                    const headerHeight = 80; // Approximate header height
+                    const headerHeight = 80;
                     const elementTop = segmentedControlRef.current.offsetTop;
                     window.scrollTo({
                       top: elementTop - headerHeight,
@@ -648,16 +646,19 @@ export default function HomePage() {
               }}
               aria-pressed={section === 'europe'}
             >
-              <span style={{ fontSize: '1.5rem', marginRight: '0.5rem', verticalAlign: 'middle' }}>🇪🇺</span> Europe
+              <span style={{ fontSize: '1.3rem', marginRight: '0.5rem', verticalAlign: 'middle' }}>🇪🇺</span> Europe
             </button>
             <button
               ref={regionBtnRefs[1]}
-              className={`relative z-10 px-8 py-4 rounded-2xl font-bold shadow-lg text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-all duration-300 hover:scale-105 active:scale-95`}
-              style={{ zIndex: section === 'usa' ? 20 : 10 }}
+              className={`px-6 py-3 rounded-xl font-semibold text-base focus:outline-none transition-colors duration-200
+                ${section === 'usa'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-blue-600'}
+              `}
               onClick={() => { dispatch(setRegion('usa')); }}
               aria-pressed={section === 'usa'}
             >
-              <span style={{ fontSize: '1.5rem', marginRight: '0.5rem', verticalAlign: 'middle' }}>🇺🇸</span> USA
+              <span style={{ fontSize: '1.3rem', marginRight: '0.5rem', verticalAlign: 'middle' }}>🇺🇸</span> USA
             </button>
           </div>
         </div>
@@ -687,25 +688,22 @@ export default function HomePage() {
               </h2>
               {/* Country/Program Selector (Europe/USA) */}
               <div className="flex justify-center my-12" data-section="country-selector">
-                <div className="relative inline-flex gap-5">
-                  {/* Animated indicator for country/program selection */}
-                  <div
-                    className="absolute top-0 bottom-0 rounded-full bg-primary z-0"
-                    style={{ pointerEvents: 'none' }}
-                  />
+                <div className="inline-flex gap-2 bg-transparent rounded-xl p-1">
                   {options.map((option: { key: string; label: string }, idx: number) => (
                     <button
                       key={option.key}
                       ref={el => { optionBtnRefs.current[idx] = el; return undefined; }}
-                      className={`relative z-10 px-8 py-4 rounded-2xl font-bold shadow-lg text-lg focus:outline-none focus:ring-0 focus:border-0 active:outline-none active:ring-0 active:border-0 transition-all duration-300 hover:scale-105 active:scale-95`}
-                      style={{ zIndex: countryOrProgram === option.key ? 20 : 10 }}
+                      className={`px-6 py-3 rounded-xl font-semibold text-base focus:outline-none transition-colors duration-200
+                        ${countryOrProgram === option.key
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 text-blue-600'}
+                      `}
                       onClick={() => {
                         dispatch(setCountryOrProgram(option.key as EuropeCountry | USProgram));
-                        // Scroll to country/course selector area when country/course is selected
                         setTimeout(() => {
                           const countrySelector = document.querySelector('[data-section="country-selector"]') as HTMLElement;
                           if (countrySelector) {
-                            const headerHeight = 80; // Approximate header height
+                            const headerHeight = 80;
                             const elementTop = countrySelector.offsetTop;
                             window.scrollTo({
                               top: elementTop - headerHeight,
@@ -714,6 +712,7 @@ export default function HomePage() {
                           }
                         }, 100);
                       }}
+                      aria-pressed={countryOrProgram === option.key}
                     >
                       {option.label}
                     </button>
