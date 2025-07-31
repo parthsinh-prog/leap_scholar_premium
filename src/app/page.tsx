@@ -435,6 +435,25 @@ export default function HomePage() {
   const openFaq = useSelector<RootState, number | null>((state) => state.ui.openFaqIndex);
   const mainSection = useSelector<RootState, string>((state) => state.ui.mainSection);
 
+  // Modal state for add-ons
+  const [openAddOnsModal, setOpenAddOnsModal] = useState<number | null>(null);
+
+  // Modal close handler (ESC key, click outside, close button)
+  useEffect(() => {
+    if (openAddOnsModal !== null) {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") setOpenAddOnsModal(null);
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [openAddOnsModal]);
+
+  // Modal overlay click handler
+  const handleModalOverlayClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (e.target === e.currentTarget) setOpenAddOnsModal(null);
+  };
+
   // Add scroll tracking for header shadow adjustment
   useEffect(() => {
     const handleScroll = () => {
@@ -795,22 +814,48 @@ export default function HomePage() {
                           )}
                         </ul>
                       </div>
+                      {/* Add-ons Modal Trigger */}
                       {plan.addOns && (
-                        <div className="mb-6 w-full">
-                          <div className="bg-gradient-to-br from-blue-50/60 to-indigo-50/40 backdrop-blur-sm rounded-2xl p-5 border border-blue-100/50">
-                            <h4 className="font-black text-primary mb-3 text-lg flex items-center">
-                              <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
-                              Available add-ons
-                            </h4>
-                            <ul className="space-y-2">
-                              {plan.addOns.map((addon, idx) => (
-                                <li key={idx} className="text-sm text-gray-700 font-medium flex items-center">
-                                  <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></div>
-                                  {addon}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
+                        <div className="mb-6 w-full flex justify-end relative">
+                          <button
+                            type="button"
+                            className="bg-white border border-primary text-primary px-5 py-2 rounded-xl font-semibold text-sm shadow hover:bg-primary hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary"
+                            onClick={() => setOpenAddOnsModal(index)}
+                            aria-label="View Available Add-ons"
+                          >
+                            View Available Add-ons
+                          </button>
+                          {/* Contextual Popover Modal */}
+                          {openAddOnsModal === index && (
+                            <div
+                              className="absolute right-0 top-full mt-2 z-40 w-80 bg-white rounded-2xl shadow-xl border border-gray-200 animate-fadeIn"
+                              style={{ minWidth: '260px' }}
+                            >
+                              {/* Arrow indicator */}
+                              <div className="absolute -top-2 right-8 w-4 h-4 bg-white border-l border-t border-gray-200 rotate-45 shadow" />
+                              <div className="p-6">
+                                <div className="flex justify-between items-center mb-4">
+                                  <h4 className="font-bold text-[#3B5AFE] text-lg">Available add-ons</h4>
+                                  <button
+                                    type="button"
+                                    className="text-gray-400 hover:text-primary text-lg font-bold focus:outline-none"
+                                    onClick={() => setOpenAddOnsModal(null)}
+                                    aria-label="Close"
+                                  >
+                                    &times;
+                                  </button>
+                                </div>
+                                <ul className="space-y-3 w-full pl-2">
+                                  {plan.addOns.map((addon, idx) => (
+                                    <li key={idx} className="flex items-start gap-3 text-sm text-gray-700 font-medium py-2 px-3 rounded-lg bg-gray-50">
+                                      <span className="mt-1 w-2 h-2 rounded-full bg-[#3B5AFE] flex-shrink-0"></span>
+                                      <span>{addon}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
                       <button className={`w-full py-4 px-8 rounded-2xl font-black text-lg transition-all duration-300 mt-4 shadow-lg hover:shadow-xl active:scale-95 ${plan.tier === "LS Premium" ? "bg-gradient-to-r from-primary to-secondary text-white hover:from-secondary hover:to-primary shadow-primary/25" : "bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white shadow-primary/10"}`}>
@@ -824,16 +869,16 @@ export default function HomePage() {
           </section>
 
           {/* Stats Section */}
-          <section className="py-16 px-4 bg-gradient-to-r from-primary to-secondary">
+          <section className="py-16 px-4 bg-[#3B5AFE]">
             <div className="max-w-7xl mx-auto">
-              <h2 className="text-3xl font-bold text-center mb-12 text-white font-heading">
+              <h2 className="text-2xl sm:text-3xl font-bold text-center mb-10 text-white font-heading">
                 What makes Leap Scholar different?
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center">
                 {leapStats.map((stat: { value: string; label: string }, index: number) => (
-                  <div key={index} className="bg-white/80 backdrop-blur rounded-3xl shadow-2xl shadow-primary/10 border border-primary/10 text-white p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/20 hover:scale-105">
-                    <div className="text-4xl font-bold mb-2">{stat.value}</div>
-                    <div className="text-lg">{stat.label}</div>
+                  <div key={index} className="bg-white bg-opacity-60 rounded-2xl shadow-md p-8 flex flex-col items-center justify-center min-h-[140px]">
+                    <div className="text-3xl sm:text-4xl font-extrabold mb-2 text-[#3B5AFE]">{stat.value}</div>
+                    <div className="text-base sm:text-lg text-[#3B5AFE] font-medium opacity-80">{stat.label}</div>
                   </div>
                 ))}
               </div>
@@ -977,19 +1022,19 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-primary to-secondary">
+      <section className="py-20 px-4 bg-[#3B5AFE]">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-6 font-heading">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6 font-heading">
             Ready to start your journey?
           </h2>
-          <p className="text-xl text-blue-100 mb-8 font-body">
+          <p className="text-lg sm:text-xl text-white/90 mb-10 font-body">
             Join thousands of students who have successfully studied abroad with Leap Scholar
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button className="bg-white text-primary px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors shadow-lg">
+            <button className="bg-white text-[#3B5AFE] px-8 py-4 rounded-xl font-bold text-lg shadow-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-200">
               Get Free Consultation
             </button>
-            <button className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-primary transition-colors">
+            <button className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-[#3B5AFE] focus:outline-none focus:ring-2 focus:ring-white transition-all duration-200">
               View All Plans
             </button>
           </div>
