@@ -697,14 +697,14 @@ export default function HomePage() {
   const numPlans = plans.length
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-white">
+    <div className="min-h-screen bg-gradient-to-b from-background to-white min-w-full">
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-[#F4F3FF] to-white pt-10 md:pt-20 pb-8 md:pb-16 text-center flex flex-col items-center">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight mb-4 md:mb-6 font-heading">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight mb-4 md:mb-6 font-heading px-4">
           LEAP SCHOLAR{" "}
           <span className="bg-gradient-to-r from-[#5B5FE3] to-[#FF6B35] bg-clip-text text-transparent">PREMIUM</span>
         </h1>
-        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600 mb-6 md:mb-10 max-w-2xl mx-auto font-body">
+        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600 mb-6 md:mb-10 max-w-2xl mx-auto font-body px-4">
           The premium service which helps you land your dream College
         </p>
         {/* Update the region selector section with HGI iOS design:
@@ -771,11 +771,11 @@ export default function HomePage() {
         <>
           {/* Plan Selection */}
           <section
-            className="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50/50 to-white"
+            className="py-12 md:py-20 bg-gradient-to-br from-gray-50/50 to-white"
             data-section="plans"
           >
-            <div className="max-w-7xl mx-auto flex flex-col items-center">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center mb-8 md:mb-12 tracking-tight text-gray-900 font-heading">
+            <div className="flex flex-col items-center">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center mb-8 md:mb-12 tracking-tight text-gray-900 font-heading px-4">
                 {section === "europe" ? "Choose your destination country" : "Choose your program"}
               </h2>
               {/* Country/Program Selector (Europe/USA) */}
@@ -960,22 +960,20 @@ export default function HomePage() {
           </section>
 
           {/* Stats Section */}
-          <section className="py-16 px-4 bg-[#3B5AFE]">
-            <div className="max-w-7xl mx-auto">
-              <h2 className="text-2xl sm:text-3xl font-bold text-center mb-10 text-white font-heading">
-                What makes Leap Scholar different?
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                {leapStats.map((stat: { value: string; label: string }, index: number) => (
-                  <div
-                    key={index}
-                    className="bg-white bg-opacity-60 rounded-2xl shadow-md p-8 flex flex-col items-center justify-center min-h-[140px]"
-                  >
-                    <div className="text-3xl sm:text-4xl font-extrabold mb-2 text-[#3B5AFE]">{stat.value}</div>
-                    <div className="text-base sm:text-lg text-[#3B5AFE] font-medium opacity-80">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
+          <section className="py-16 bg-[#3B5AFE]">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-10 text-white font-heading px-4">
+              What makes Leap Scholar different?
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center px-4 max-w-7xl mx-auto">
+              {leapStats.map((stat: { value: string; label: string }, index: number) => (
+                <div
+                  key={index}
+                  className="bg-white bg-opacity-60 rounded-2xl shadow-md p-8 flex flex-col items-center justify-center min-h-[140px]"
+                >
+                  <div className="text-3xl sm:text-4xl font-extrabold mb-2 text-[#3B5AFE]">{stat.value}</div>
+                  <div className="text-base sm:text-lg text-[#3B5AFE] font-medium opacity-80">{stat.label}</div>
+                </div>
+              ))}
             </div>
           </section>
         </>
@@ -983,14 +981,12 @@ export default function HomePage() {
       {mainSection === "testimonials" && (
         <>
           {/* Testimonials - Auto-scrolling Carousel */}
-          <section className="py-16 px-4 bg-white" data-section="testimonials">
-            <div className="max-w-7xl mx-auto">
-              <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 font-heading">
-                See why our students ❤ us
-              </h2>
-              <div className="relative">
-                <AutoScrollTestimonials testimonials={testimonials} />
-              </div>
+          <section className="py-16 bg-white" data-section="testimonials">
+            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 font-heading px-4">
+              See why our students ❤ us
+            </h2>
+            <div className="relative">
+              <AutoScrollTestimonials testimonials={testimonials} />
             </div>
           </section>
         </>
@@ -999,8 +995,9 @@ export default function HomePage() {
       {mainSection === "faqs" && (
         <>
           {/* FAQ Section - HGI iOS Glassmorphism Accordion */}
-          <section className="py-16 px-4 bg-gradient-to-br from-[#F4F3FF] to-white/80" data-section="faqs">
-            <div className="max-w-3xl mx-auto">
+          <section className="py-16 bg-gradient-to-br from-[#F4F3FF] to-white/80" data-section="faqs">
+            <div className="flex justify-center px-4 max-w-5xl mx-auto">
+              <div className="max-w-3xl w-full">
               <h2 className="text-4xl font-extrabold text-center mb-14 text-gray-900 font-heading tracking-tight drop-shadow-sm">
                 Got questions?{" "}
                 <span className="bg-gradient-to-r from-[#443EFF] to-[#FF6B35] bg-clip-text text-transparent">
@@ -1050,13 +1047,14 @@ export default function HomePage() {
                 })}
               </div>
             </div>
+            </div>
           </section>
         </>
       )}
 
       {/* Trust Section */}
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-7xl mx-auto text-center">
+      <section className="py-16 bg-white">
+        <div className="text-center px-4 max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold mb-8 text-gray-900 font-heading">
             Trusted and backed by marquee global investors
           </h2>
@@ -1080,8 +1078,8 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-[#3B5AFE]">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="py-20 bg-[#3B5AFE] text-center">
+        <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6 font-heading">Ready to start your journey?</h2>
           <p className="text-lg sm:text-xl text-white/90 mb-10 font-body">
             Join thousands of students who have successfully studied abroad with Leap Scholar
@@ -1098,8 +1096,8 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4">
-        <div className="max-w-7xl mx-auto">
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="px-4 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center mb-4">

@@ -15,7 +15,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur shadow-2xl rounded-b-3xl border-b border-primary/10 transition-all duration-300 [.header-reduced-shadow_&]:shadow-lg [.header-reduced-shadow_&]:bg-white/60">
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur shadow-2xl rounded-b-3xl border-b border-primary/10 transition-all duration-300 [.header-reduced-shadow_&]:shadow-lg [.header-reduced-shadow_&]:bg-white/60 w-full">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4 md:py-6">
           <div className="flex items-center">
             <Image src="/leap_logo.png" alt="Leap Scholar Logo" width={160} height={40} />
@@ -58,7 +58,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <button type="submit" className="bg-primary text-white rounded-xl py-3 font-semibold shadow-md hover:bg-secondary transition-all duration-200">Send Message</button>
         </form>
       </GlassModal>
-      <div className="max-w-[1440px] mx-auto px-2 md:px-6 pt-4 md:pt-8 pb-8 md:pb-16">{children}</div>
+      {children}
     </>
   );
 } 

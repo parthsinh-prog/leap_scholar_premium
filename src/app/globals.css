@@ -2,6 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Ensure all sections can go edge-to-edge */
+section {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+}
+
 .card, .section-card, .testimonial-card, .plan-card, .stats-card {
   @apply bg-white/80 backdrop-blur rounded-3xl shadow-2xl shadow-primary/10 border border-primary/10 transition-all duration-300;
 }
