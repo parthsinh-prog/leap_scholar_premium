@@ -659,6 +659,22 @@ export default function HomePage() {
   // Calculate the number of plans for the current selection
   const numPlans = plans.length
 
+  // Function to get the "Most Popular" tag based on selected destination
+  const getMostPopularTag = (selection: UnifiedSelection) => {
+    switch (selection) {
+      case 'usa-unified':
+        return 'LS Elite of USA'
+      case 'germany':
+        return 'LS Elite of Germany'
+      case 'france':
+        return 'LS Elite of France'
+      case 'rest-of-europe':
+        return 'LS Elite of Rest of Europe'
+      default:
+        return 'Most Popular'
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-white min-w-full">
       {/* Hero Section */}
@@ -670,6 +686,40 @@ export default function HomePage() {
         <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600 mb-6 md:mb-10 max-w-2xl mx-auto font-body px-4">
           The premium service which helps you land your dream College
         </p>
+        
+        {/* Unified Selector - 4 buttons */}
+        <div className="flex justify-center mb-8" data-section="unified-selector">
+          <div className="inline-flex gap-2 bg-transparent rounded-xl p-1 flex-wrap justify-center">
+            {unifiedOptions.map((option, idx: number) => (
+              <button
+                key={option.key}
+                ref={(el) => {
+                  optionBtnRefs.current[idx] = el
+                  return undefined
+                }}
+                className={`px-4 py-3 rounded-xl font-semibold text-sm sm:text-base focus:outline-none transition-colors duration-200
+                  ${unifiedSelection === option.key ? "bg-[#443EFF] text-white" : "bg-gray-100 text-[#443EFF]"}
+                `}
+                onClick={() => {
+                  dispatch(setUnifiedSelection(option.key as UnifiedSelection))
+                  setTimeout(() => {
+                    if (segmentedControlRef.current) {
+                      const headerHeight = 80
+                      const elementTop = segmentedControlRef.current.offsetTop
+                      window.scrollTo({
+                        top: elementTop - headerHeight,
+                        behavior: "smooth",
+                      })
+                    }
+                  }, 100)
+                }}
+                aria-pressed={unifiedSelection === option.key}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Segmented Control for main content */}
@@ -694,45 +744,6 @@ export default function HomePage() {
             data-section="plans"
           >
             <div className="flex flex-col items-center">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center mb-8 md:mb-12 tracking-tight text-gray-900 font-heading px-4">
-                Choose your destination
-              </h2>
-              {/* Unified Selector - 4 buttons */}
-              <div className="flex justify-center my-12" data-section="unified-selector">
-                <div className="inline-flex gap-2 bg-transparent rounded-xl p-1 flex-wrap justify-center">
-                  {unifiedOptions.map((option, idx: number) => (
-                    <button
-                      key={option.key}
-                      ref={(el) => {
-                        optionBtnRefs.current[idx] = el
-                        return undefined
-                      }}
-                      className={`px-4 py-3 rounded-xl font-semibold text-sm sm:text-base focus:outline-none transition-colors duration-200
-                        ${unifiedSelection === option.key ? "bg-[#443EFF] text-white" : "bg-gray-100 text-[#443EFF]"}
-                      `}
-                      onClick={() => {
-                        dispatch(setUnifiedSelection(option.key as UnifiedSelection))
-                        setTimeout(() => {
-                          const selector = document.querySelector(
-                            '[data-section="unified-selector"]',
-                          ) as HTMLElement
-                          if (selector) {
-                            const headerHeight = 80
-                            const elementTop = selector.offsetTop
-                            window.scrollTo({
-                              top: elementTop - headerHeight,
-                              behavior: "smooth",
-                            })
-                          }
-                        }, 100)
-                      }}
-                      aria-pressed={unifiedSelection === option.key}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
               {/* Plans Grid */}
               <div
                 className={`grid gap-8 w-full justify-center items-stretch mx-auto ${
@@ -749,12 +760,12 @@ export default function HomePage() {
                 {plans.map((plan, index) => (
                   <div
                     key={plan.tier + index}
-                    className={`relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-primary/5 border border-white/30 transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl hover:shadow-primary/15 hover:scale-[1.02] group ${plan.tier === "LS Premium" ? "ring-4 ring-primary/20 bg-gradient-to-br from-white/95 to-primary/5" : "bg-white/95"}`}
+                    className={`relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-primary/5 border border-white/30 transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl hover:shadow-primary/15 hover:scale-[1.02] group ${plan.tier === "LS Elite" ? "ring-4 ring-primary/20 bg-gradient-to-br from-white/95 to-primary/5" : "bg-white/95"}`}
                   >
-                    {plan.tier === "LS Premium" && (
+                    {plan.tier === "LS Elite" && (
                       <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 flex justify-center w-full">
                         <span className="bg-gradient-to-r from-primary to-secondary text-white px-6 py-2.5 rounded-full text-sm font-black shadow-xl whitespace-nowrap">
-                          Most Popular
+                          {getMostPopularTag(unifiedSelection)}
                         </span>
                       </div>
                     )}
@@ -764,7 +775,7 @@ export default function HomePage() {
                           {plan.tier}
                         </h3>
                         <div className="flex flex-col items-center justify-center mb-2 md:mb-3">
-                          <span className="text-3xl md:text-5xl font-black text-primary tracking-tight">
+                          <span className={`text-3xl md:text-5xl font-black tracking-tight ${plan.tier === "LS Elite" ? "text-primary" : "text-gray-900"}`}>
                             ₹{plan.priceRange[0].toLocaleString("en-IN")}
                           </span>
                           <span className="text-base md:text-lg text-gray-400 line-through mt-1 font-medium">
@@ -867,7 +878,7 @@ export default function HomePage() {
                         </div>
                       )}
                       <button
-                        className={`w-full py-4 px-8 rounded-2xl font-black text-lg transition-all duration-300 mt-4 shadow-lg hover:shadow-xl active:scale-95 ${plan.tier === "LS Premium" ? "bg-gradient-to-r from-primary to-secondary text-white hover:from-secondary hover:to-primary shadow-primary/25" : "bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white shadow-primary/10"}`}
+                        className={`w-full py-4 px-8 rounded-2xl font-black text-lg transition-all duration-300 mt-4 shadow-lg hover:shadow-xl active:scale-95 ${plan.tier === "LS Elite" ? "bg-gradient-to-r from-primary to-secondary text-white hover:from-secondary hover:to-primary shadow-primary/25" : "bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white shadow-primary/10"}`}
                       >
                         Enrol Now
                       </button>
