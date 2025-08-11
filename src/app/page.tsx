@@ -2,10 +2,10 @@
 import React, { useRef, useLayoutEffect, useState, useEffect, useMemo } from "react"
 import { CheckCircle, Star, GraduationCap, ChevronDown, ChevronUp } from "lucide-react"
 import Image from "next/image"
-import { plansData, type EuropeCountry, type USProgram, type Plan } from "../constants/plans"
+import { plansData, unifiedPlansData, type EuropeCountry, type USProgram, type Plan, type UnifiedSelection } from "../constants/plans"
 import { useSelector, useDispatch } from "react-redux"
 import type { RootState } from "../store"
-import { setRegion, setCountryOrProgram, setOpenFaqIndex, setMainSection, type MainSection } from "../store/uiSlice"
+import { setRegion, setCountryOrProgram, setUnifiedSelection, setOpenFaqIndex, setMainSection, type MainSection } from "../store/uiSlice"
 import SegmentedControl from "../components/SegmentedControl/SegmentedControl"
 
 // France: What makes Leap Scholar different?
@@ -248,12 +248,6 @@ const investors = [
   { name: "Jungle Ventures", img: "/Jungle_leap.webp" },
   { name: "Harvard Management Company", img: "/Harvard_leap.webp" },
 ]
-
-const countryLabels: Record<EuropeCountry, string> = {
-  germany: "🇩🇪 Germany",
-  france: "🇫🇷 France",
-  "rest-of-europe": "🇪🇺 Rest of Europe",
-}
 
 // Germany: What makes Leap Scholar different?
 const leapStatsGermany = [
@@ -503,6 +497,7 @@ export default function HomePage() {
   const dispatch = useDispatch()
   const section = useSelector<RootState, string>((state) => state.ui.region)
   const countryOrProgram = useSelector<RootState, string>((state) => state.ui.countryOrProgram)
+  const unifiedSelection = useSelector<RootState, UnifiedSelection>((state) => state.ui.unifiedSelection)
   const openFaq = useSelector<RootState, number | null>((state) => state.ui.openFaqIndex)
   const mainSection = useSelector<RootState, string>((state) => state.ui.mainSection)
 
@@ -587,50 +582,22 @@ export default function HomePage() {
     }, 100)
   }
 
-  // --- Region Selector Animation State ---
-  const regionBtnRefs = [useRef<HTMLButtonElement>(null), useRef<HTMLButtonElement>(null)]
-  // const [regionIndicator, setRegionIndicator] = useState({ left: 0, width: 0 });
-  useLayoutEffect(() => {
-    const idx = section === "europe" ? 0 : 1
-    const btn = regionBtnRefs[idx].current
-    if (btn) {
-      // Account for the container's padding (p-2 = 8px)
-      // setRegionIndicator({ left: btn.offsetLeft - 8, width: btn.offsetWidth });
-    }
-  }, [section])
+  // New unified options for the 4-button layout
+  const unifiedOptions = [
+    { key: 'usa-unified', label: '🇺🇸 UG/MBA/MS', icon: '🇺🇸' },
+    { key: 'germany', label: '🇩🇪 Germany', icon: '🇩🇪' },
+    { key: 'france', label: '🇫🇷 France', icon: '🇫🇷' },
+    { key: 'rest-of-europe', label: '🇪🇺 Rest of Europe', icon: '🇪🇺' },
+  ] as const;
 
-  // Wrap options in useMemo to avoid recreating on every render
-  const programLabels: Record<USProgram, string> = {
-    ug: "UG",
-    mba: "MBA",
-    ms: "MS",
-  }
-  const options = useMemo<{ key: string; label: string }[]>(() => {
-    return section === "europe"
-      ? Object.entries(countryLabels).map(([key, label]) => ({ key, label }))
-      : Object.entries(programLabels).map(([key, label]) => ({ key, label }))
-  }, [section])
-  let plans: Plan[] = []
+  // Get plans from unified data structure
+  let plans: Plan[] = unifiedPlansData[unifiedSelection]?.plans || []
 
-  if (section === "europe") {
-    if (countryOrProgram && countryOrProgram in plansData.europe) {
-      plans = plansData.europe[countryOrProgram as EuropeCountry]?.plans || []
-    }
-  } else if (section === "usa") {
-    if (countryOrProgram === "ug") {
-      plans = plansData.usa["ug"]?.plans || []
-    } else if (countryOrProgram === "mba") {
-      plans = plansData.usa["mba"]?.plans || []
-    } else if (countryOrProgram === "ms") {
-      plans = plansData.usa["ms"]?.plans || []
-    }
-  }
-
-  // --- Country/Program Selector Animation State ---
+  // --- Unified Selector Animation State ---
   const optionBtnRefs = useRef<(HTMLButtonElement | null)[]>([])
   const [optionIndicator, setOptionIndicator] = useState({ left: 0, width: 0 })
   useLayoutEffect(() => {
-    const idx = options.findIndex((opt) => opt.key === countryOrProgram)
+    const idx = unifiedOptions.findIndex((opt) => opt.key === unifiedSelection)
     const btn = optionBtnRefs.current[idx]
     if (btn) {
       const newLeft = btn.offsetLeft
@@ -639,7 +606,7 @@ export default function HomePage() {
         setOptionIndicator({ left: newLeft, width: newWidth })
       }
     }
-  }, [countryOrProgram, options, optionIndicator.left, optionIndicator.width, optionBtnRefs])
+  }, [unifiedSelection, unifiedOptions, optionIndicator.left, optionIndicator.width, optionBtnRefs])
 
   // Only show one set of three buttons for USA: UG, MBA, MS
   // const usaPrograms = [
@@ -648,50 +615,46 @@ export default function HomePage() {
   //   { key: 'ms', label: 'MS' },
   // ];
 
-  // Determine which data to use based on selected region/country
+  // Determine which data to use based on unified selection
   let leapStats = leapStatsGermany
   let testimonials = testimonialsGermany
-  // let steps = stepsGermany;
   let faqs = faqsGermany
 
-  if (section === "europe") {
-    if (countryOrProgram === "germany") {
+  switch (unifiedSelection) {
+    case 'usa-unified':
+      // For USA unified, we can use any of the USA testimonials - let's use UG as default
+      leapStats = leapStatsGermany // USA doesn't have separate stats, use default
+      testimonials = testimonialsUSAUG
+      faqs = faqsGermany // USA doesn't have separate FAQs, use default
+      break
+    case 'germany':
       leapStats = leapStatsGermany
       testimonials = testimonialsGermany
-      // steps = stepsGermany;
       faqs = faqsGermany
-    } else if (countryOrProgram === "france") {
+      break
+    case 'france':
       leapStats = leapStatsFrance
       testimonials = testimonialsFrance
-      // steps = stepsFrance;
       faqs = faqsFrance
-    } else if (countryOrProgram === "rest-of-europe") {
+      break
+    case 'rest-of-europe':
       leapStats = leapStatsRestOfEurope
       testimonials = testimonialsRestOfEurope
-      // steps = stepsRestOfEurope;
       faqs = faqsRestOfEurope
-    }
-  } else if (section === "usa") {
-    if (countryOrProgram === "ug") {
-      testimonials = testimonialsUSAUG
-    } else if (countryOrProgram === "mba") {
-      testimonials = testimonialsUSAMBA
-    } else if (countryOrProgram === "ms") {
-      testimonials = testimonialsUSAMS
-    }
+      break
   }
 
   const segmentedControlRef = useRef<HTMLDivElement>(null)
-  const prevSection = useRef(section)
+  const prevUnifiedSelection = useRef(unifiedSelection)
   useEffect(() => {
-    if (prevSection.current !== section && segmentedControlRef.current) {
+    if (prevUnifiedSelection.current !== unifiedSelection && segmentedControlRef.current) {
       const header = document.querySelector("header")
       const headerHeight = header ? header.getBoundingClientRect().height : 80
       const top = segmentedControlRef.current.getBoundingClientRect().top + window.scrollY - headerHeight - 12
       window.scrollTo({ top, behavior: "smooth" })
-      prevSection.current = section
+      prevUnifiedSelection.current = unifiedSelection
     }
-  }, [section])
+  }, [unifiedSelection])
 
   // Calculate the number of plans for the current selection
   const numPlans = plans.length
@@ -707,50 +670,6 @@ export default function HomePage() {
         <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600 mb-6 md:mb-10 max-w-2xl mx-auto font-body px-4">
           The premium service which helps you land your dream College
         </p>
-        {/* Update the region selector section with HGI iOS design:
-            - Enhanced visual hierarchy
-            - Better spacing and typography
-            - Refined shadows and glassmorphism
-            - Improved microinteractions
-            - More polished iOS-style aesthetics */}
-        <div className="flex justify-center py-0">
-          <div className="inline-flex gap-2 bg-transparent rounded-xl p-1">
-            <button
-              ref={regionBtnRefs[0]}
-              className={`px-6 py-3 rounded-xl font-semibold text-base focus:outline-none transition-colors duration-200
-                ${section === "europe" ? "bg-[#443EFF] text-white" : "bg-gray-100 text-[#443EFF]"}
-              `}
-              onClick={() => {
-                dispatch(setRegion("europe"))
-                setTimeout(() => {
-                  if (segmentedControlRef.current) {
-                    const headerHeight = 80
-                    const elementTop = segmentedControlRef.current.offsetTop
-                    window.scrollTo({
-                      top: elementTop - headerHeight,
-                      behavior: "smooth",
-                    })
-                  }
-                }, 100)
-              }}
-              aria-pressed={section === "europe"}
-            >
-              <span style={{ fontSize: "1.3rem", marginRight: "0.5rem", verticalAlign: "middle" }}>🇪🇺</span> Europe
-            </button>
-            <button
-              ref={regionBtnRefs[1]}
-              className={`px-6 py-3 rounded-xl font-semibold text-base focus:outline-none transition-colors duration-200
-                ${section === "usa" ? "bg-[#443EFF] text-white" : "bg-gray-100 text-[#443EFF]"}
-              `}
-              onClick={() => {
-                dispatch(setRegion("usa"))
-              }}
-              aria-pressed={section === "usa"}
-            >
-              <span style={{ fontSize: "1.3rem", marginRight: "0.5rem", verticalAlign: "middle" }}>🇺🇸</span> USA
-            </button>
-          </div>
-        </div>
       </section>
 
       {/* Segmented Control for main content */}
@@ -776,30 +695,30 @@ export default function HomePage() {
           >
             <div className="flex flex-col items-center">
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center mb-8 md:mb-12 tracking-tight text-gray-900 font-heading px-4">
-                {section === "europe" ? "Choose your destination country" : "Choose your program"}
+                Choose your destination
               </h2>
-              {/* Country/Program Selector (Europe/USA) */}
-              <div className="flex justify-center my-12" data-section="country-selector">
-                <div className="inline-flex gap-2 bg-transparent rounded-xl p-1">
-                  {options.map((option: { key: string; label: string }, idx: number) => (
+              {/* Unified Selector - 4 buttons */}
+              <div className="flex justify-center my-12" data-section="unified-selector">
+                <div className="inline-flex gap-2 bg-transparent rounded-xl p-1 flex-wrap justify-center">
+                  {unifiedOptions.map((option, idx: number) => (
                     <button
                       key={option.key}
                       ref={(el) => {
                         optionBtnRefs.current[idx] = el
                         return undefined
                       }}
-                      className={`px-6 py-3 rounded-xl font-semibold text-base focus:outline-none transition-colors duration-200
-                        ${countryOrProgram === option.key ? "bg-[#443EFF] text-white" : "bg-gray-100 text-[#443EFF]"}
+                      className={`px-4 py-3 rounded-xl font-semibold text-sm sm:text-base focus:outline-none transition-colors duration-200
+                        ${unifiedSelection === option.key ? "bg-[#443EFF] text-white" : "bg-gray-100 text-[#443EFF]"}
                       `}
                       onClick={() => {
-                        dispatch(setCountryOrProgram(option.key as EuropeCountry | USProgram))
+                        dispatch(setUnifiedSelection(option.key as UnifiedSelection))
                         setTimeout(() => {
-                          const countrySelector = document.querySelector(
-                            '[data-section="country-selector"]',
+                          const selector = document.querySelector(
+                            '[data-section="unified-selector"]',
                           ) as HTMLElement
-                          if (countrySelector) {
+                          if (selector) {
                             const headerHeight = 80
-                            const elementTop = countrySelector.offsetTop
+                            const elementTop = selector.offsetTop
                             window.scrollTo({
                               top: elementTop - headerHeight,
                               behavior: "smooth",
@@ -807,7 +726,7 @@ export default function HomePage() {
                           }
                         }, 100)
                       }}
-                      aria-pressed={countryOrProgram === option.key}
+                      aria-pressed={unifiedSelection === option.key}
                     >
                       {option.label}
                     </button>

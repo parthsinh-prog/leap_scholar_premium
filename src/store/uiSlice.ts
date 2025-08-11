@@ -4,11 +4,13 @@ export type Region = 'europe' | 'usa';
 export type EuropeCountry = 'germany' | 'france' | 'rest-of-europe';
 export type USProgram = 'ug' | 'mba' | 'ms';
 export type CountryOrProgram = EuropeCountry | USProgram;
+export type UnifiedSelection = 'usa-unified' | 'germany' | 'france' | 'rest-of-europe';
 export type MainSection = 'plans' | 'testimonials' | 'faqs';
 
 interface UIState {
   region: Region;
   countryOrProgram: CountryOrProgram;
+  unifiedSelection: UnifiedSelection; // New unified selection state
   isSidebarOpen: boolean;
   isModalOpen: boolean;
   openFaqIndex: number | null;
@@ -18,6 +20,7 @@ interface UIState {
 const initialState: UIState = {
   region: 'europe',
   countryOrProgram: 'germany',
+  unifiedSelection: 'germany', // Default to Germany
   isSidebarOpen: false,
   isModalOpen: false,
   openFaqIndex: null,
@@ -34,6 +37,9 @@ const uiSlice = createSlice({
     },
     setCountryOrProgram(state, action: PayloadAction<CountryOrProgram>) {
       state.countryOrProgram = action.payload;
+    },
+    setUnifiedSelection(state, action: PayloadAction<UnifiedSelection>) {
+      state.unifiedSelection = action.payload;
     },
     openSidebar(state) {
       state.isSidebarOpen = true;
@@ -59,6 +65,7 @@ const uiSlice = createSlice({
 export const {
   setRegion,
   setCountryOrProgram,
+  setUnifiedSelection,
   openSidebar,
   closeSidebar,
   openModal,

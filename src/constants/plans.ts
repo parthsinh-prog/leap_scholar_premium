@@ -2,6 +2,7 @@ export type Region = 'europe' | 'usa';
 
 export type EuropeCountry = 'germany' | 'france' | 'rest-of-europe';
 export type USProgram = 'ug' | 'mba' | 'ms';
+export type UnifiedSelection = 'usa-unified' | 'germany' | 'france' | 'rest-of-europe';
 
 export type PlanTier = 'LS Plus' | 'LS Premium' | 'LS Elite' | 'LS Platinum';
 
@@ -351,5 +352,61 @@ export const plansData: {
         },
       ],
     },
+  },
+};
+
+// New unified data structure for the simplified 4-button layout
+export const unifiedPlansData: Record<UnifiedSelection, CountryOrProgram> = {
+  'usa-unified': {
+    name: 'USA (UG/MBA/MS)',
+    plans: [
+      {
+        tier: 'LS Premium',
+        priceRange: [34999, 50000],
+        applications: 'Upto 3 Applications',
+        counsellor: 'Dedicated Senior Counsellor',
+        ielts: 'IELTS Prep with Band Assurance',
+        sopLorSupport: 'Dedicated Premium Essay SOP, LOR editor',
+        visaSupport: 'End-to-End Visa Application and Interview Guidance',
+        scholarshipSupport: 'Scholarship and Loan Support',
+        accommodationSupport: true,
+        creditTotal: 10000,
+        creditBreakdown: {
+          loanProcessing: 5000,
+          universityDeposit: 5000,
+        },
+        addOns: ['3 additional Applications for ₹22,500'],
+      },
+      {
+        tier: 'LS Elite',
+        priceRange: [69999, 100000],
+        applications: 'Upto 7 Applications',
+        counsellor: 'Dedicated Lead Counsellor',
+        ielts: 'IELTS Prep with Band Assurance',
+        sopLorSupport: 'Dedicated Premium Essay SOP, LOR editor',
+        visaSupport: 'End-to-End Visa Application and Interview Guidance',
+        scholarshipSupport: 'Scholarship and Loan Support',
+        accommodationSupport: true,
+        creditTotal: 20000,
+        creditBreakdown: {
+          loanProcessing: 10000,
+          universityDeposit: 5000,
+          accommodation: 5000,
+        },
+        addOns: ['3 additional Applications for ₹22,500'],
+      },
+    ],
+  },
+  'germany': {
+    name: 'Germany',
+    plans: plansData.europe.germany.plans,
+  },
+  'france': {
+    name: 'France', 
+    plans: plansData.europe.france.plans,
+  },
+  'rest-of-europe': {
+    name: 'Rest of Europe',
+    plans: plansData.europe['rest-of-europe'].plans,
   },
 };
