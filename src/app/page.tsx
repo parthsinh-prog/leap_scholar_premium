@@ -6,6 +6,8 @@ import { plansData, unifiedPlansData, type EuropeCountry, type USProgram, type P
 import { useSelector, useDispatch } from "react-redux"
 import type { RootState } from "../store"
 import { setRegion, setCountryOrProgram, setUnifiedSelection, setOpenFaqIndex } from "../store/uiSlice"
+import JourneyTimeline from "../components/JourneyTimeline/JourneyTimeline"
+import { AnimatedStatCard } from "../components/AnimatedStatCard/AnimatedStatCard"
 
 // France: What makes Leap Scholar different?
 const leapStatsFrance = [
@@ -499,19 +501,23 @@ export default function HomePage() {
   const unifiedSelection = useSelector<RootState, UnifiedSelection>((state) => state.ui.unifiedSelection)
   const openFaq = useSelector<RootState, number | null>((state) => state.ui.openFaqIndex)
 
-  // Modal state for add-ons
+  // Modal state for add-ons and credits
   const [openAddOnsModal, setOpenAddOnsModal] = useState<number | null>(null)
+  const [openCreditsModal, setOpenCreditsModal] = useState<number | null>(null)
 
   // Modal close handler (ESC key, click outside, close button)
   useEffect(() => {
-    if (openAddOnsModal !== null) {
+    if (openAddOnsModal !== null || openCreditsModal !== null) {
       const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Escape") setOpenAddOnsModal(null)
+        if (e.key === "Escape") {
+          setOpenAddOnsModal(null)
+          setOpenCreditsModal(null)
+        }
       }
       window.addEventListener("keydown", handleKeyDown)
       return () => window.removeEventListener("keydown", handleKeyDown)
     }
-  }, [openAddOnsModal])
+  }, [openAddOnsModal, openCreditsModal])
 
   // Modal overlay click handler
   // const handleModalOverlayClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -765,27 +771,69 @@ export default function HomePage() {
                           </span>
                         </div>
                       </div>
-                      <div className="bg-gradient-to-br from-gray-50/80 to-white/60 backdrop-blur-sm rounded-2xl p-5 mb-6 w-full border border-gray-100/50">
-                        <h4 className="font-black text-primary mb-3 text-lg">
-                          Credits Worth ₹{plan.creditTotal.toLocaleString("en-IN")}
-                        </h4>
-                        <ul className="space-y-2">
-                          {Object.entries(plan.creditBreakdown).map(([key, value]) =>
-                            value ? (
-                              <li key={key} className="text-sm text-gray-600 font-medium flex items-center">
-                                <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></div>
-                                {key.replace(/([A-Z])/g, " $1")}: ₹{value.toLocaleString("en-IN")}
-                              </li>
-                            ) : null,
-                          )}
-                        </ul>
+                      {/* Credits Modal Trigger */}
+                      <div className="w-full flex justify-center relative mb-4">
+                        <button
+                          type="button"
+                          className="bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary text-primary px-6 py-3 rounded-xl font-semibold text-base shadow hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary h-12 min-w-[240px] whitespace-nowrap"
+                          onClick={() => setOpenCreditsModal(index)}
+                          aria-label="View Credits Details"
+                        >
+                          View Credits
+                        </button>
+                        {/* Credits Modal */}
+                        {openCreditsModal === index && (
+                          <div
+                            className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-40 w-80 bg-white rounded-2xl shadow-xl border border-gray-200 animate-fadeIn"
+                            style={{ minWidth: "300px" }}
+                          >
+                            <div className="p-6">
+                              <div className="flex items-center justify-between mb-4">
+                                <h4 className="font-bold text-primary text-lg flex items-center">
+                                  <div className="w-2 h-2 bg-gradient-to-r from-primary to-secondary rounded-full mr-3 animate-pulse"></div>
+                                  Credits Worth ₹{plan.creditTotal.toLocaleString("en-IN")}
+                                </h4>
+                                <button
+                                  onClick={() => setOpenCreditsModal(null)}
+                                  className="text-gray-400 hover:text-gray-600 transition-colors duration-200"
+                                  aria-label="Close modal"
+                                >
+                                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                                  </svg>
+                                </button>
+                              </div>
+                              <div className="space-y-3">
+                                {Object.entries(plan.creditBreakdown).map(([key, value], idx) =>
+                                  value ? (
+                                    <div key={key} className="bg-gray-50/80 backdrop-blur-sm rounded-xl p-3 border border-gray-100/50 hover:bg-gray-100/80 transition-all duration-300 group/item">
+                                      <div className="flex items-center justify-between">
+                                        <div className="flex items-center">
+                                          <div className="w-8 h-8 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center mr-3 group-hover/item:scale-110 transition-transform duration-300">
+                                            <div className="w-2 h-2 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+                                          </div>
+                                          <span className="font-semibold text-gray-800 text-sm">
+                                            {key.replace(/([A-Z])/g, " $1").replace(/^\s/, "")}
+                                          </span>
+                                        </div>
+                                        <span className="font-bold text-primary bg-primary/10 px-3 py-1 rounded-lg text-sm">
+                                          ₹{value.toLocaleString("en-IN")}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  ) : null,
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                       {/* Add-ons Modal Trigger */}
-                      {plan.addOns && (
-                        <div className="mb-6 w-full flex justify-end relative">
+                      {plan.addOns ? (
+                        <div className="w-full flex justify-center relative mb-4">
                           <button
                             type="button"
-                            className="bg-white border border-primary text-primary px-5 py-2 rounded-xl font-semibold text-sm shadow hover:bg-primary hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary"
+                            className="bg-white border border-primary text-primary px-6 py-3 rounded-xl font-semibold text-base shadow hover:bg-primary hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary h-12 min-w-[240px] whitespace-nowrap"
                             onClick={() => setOpenAddOnsModal(index)}
                             aria-label="View Available Add-ons"
                           >
@@ -794,7 +842,7 @@ export default function HomePage() {
                           {/* Contextual Popover Modal */}
                           {openAddOnsModal === index && (
                             <div
-                              className="absolute right-0 top-full mt-2 z-40 w-80 bg-white rounded-2xl shadow-xl border border-gray-200 animate-fadeIn"
+                              className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-40 w-80 bg-white rounded-2xl shadow-xl border border-gray-200 animate-fadeIn"
                               style={{ minWidth: "260px" }}
                             >
                               {/* Arrow indicator */}
@@ -826,12 +874,19 @@ export default function HomePage() {
                             </div>
                           )}
                         </div>
+                      ) : (
+                        /* Empty spacer to maintain consistent spacing when no add-ons */
+                        <div className="h-4"></div>
                       )}
-                      <button
-                        className={`w-full py-4 px-8 rounded-2xl font-black text-lg transition-all duration-300 mt-4 shadow-lg hover:shadow-xl active:scale-95 ${plan.tier === "LS Elite" ? "bg-gradient-to-r from-primary to-secondary text-white hover:from-secondary hover:to-primary shadow-primary/25" : "bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white shadow-primary/10"}`}
-                      >
-                        Enrol Now
-                      </button>
+                      
+                      {/* Primary Action Button */}
+                      <div className="w-full">
+                        <button
+                          className={`w-full py-3 px-8 rounded-2xl font-black text-base transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 h-12 whitespace-nowrap ${plan.tier === "LS Elite" ? "bg-gradient-to-r from-primary to-secondary text-white hover:from-secondary hover:to-primary shadow-primary/25" : "bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white shadow-primary/10"}`}
+                        >
+                          Enrol Now
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -851,53 +906,26 @@ export default function HomePage() {
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
                 {leapStats.map((stat: { value: string; label: string }, index: number) => (
-                  <div
+                  <AnimatedStatCard
                     key={index}
-                    className="bg-white/20 backdrop-blur-xl rounded-3xl shadow-xl border border-white/30 p-6 md:p-8 flex flex-col items-center justify-center min-h-[160px] md:min-h-[180px] hover:bg-white/25 hover:scale-105 transition-all duration-300 group"
-                  >
-                    <div className="text-3xl md:text-4xl lg:text-5xl font-black mb-3 text-white drop-shadow-lg group-hover:scale-110 transition-transform duration-300">
-                      {stat.value}
-                    </div>
-                    <div className="text-sm md:text-base lg:text-lg text-white/90 font-semibold text-center leading-relaxed">
-                      {stat.label}
-                    </div>
-                  </div>
+                    stat={stat}
+                    index={index}
+                  />
                 ))}
               </div>
             </div>
           </section>
 
-          {/* Study Abroad Journey Section */}
-          <section className="py-16 md:py-24 bg-gradient-to-br from-white via-gray-50/30 to-blue-50/20">
-            <div className="max-w-7xl mx-auto px-4">
-              <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 md:mb-16 text-gray-900 font-heading tracking-tight">
-                Your{" "}
-                <span className="bg-gradient-to-r from-[#443EFF] to-[#FF6B35] bg-clip-text text-transparent font-extrabold">
-                  Study Abroad Journey
-                </span>
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-                {steps.map((step, index) => (
-                  <div key={index} className="text-center group">
-                    <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-xl border border-gray-100/50 hover:shadow-2xl hover:scale-105 transition-all duration-300 mb-6">
-                      <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                        <span className="text-white font-black text-2xl md:text-3xl">{index + 1}</span>
-                      </div>
-                      <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 group-hover:text-primary transition-colors duration-300">
-                        {step.title}
-                      </h3>
-                      <div className="space-y-3">
-                        {step.items.map((item, itemIndex) => (
-                          <div key={itemIndex} className="text-left">
-                            <h4 className="font-bold text-gray-800 mb-1">{item.name}</h4>
-                            <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          {/* Study Abroad Journey Section - Progressive Timeline */}
+          <section className="py-16 md:py-24 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 relative overflow-hidden">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5">
+              <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#443EFF] rounded-full blur-3xl"></div>
+              <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#FF6B35] rounded-full blur-3xl"></div>
+            </div>
+            
+            <div className="max-w-7xl mx-auto px-4 relative z-10">
+              <JourneyTimeline />
             </div>
           </section>
 
