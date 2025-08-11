@@ -5,8 +5,7 @@ import Image from "next/image"
 import { plansData, unifiedPlansData, type EuropeCountry, type USProgram, type Plan, type UnifiedSelection } from "../constants/plans"
 import { useSelector, useDispatch } from "react-redux"
 import type { RootState } from "../store"
-import { setRegion, setCountryOrProgram, setUnifiedSelection, setOpenFaqIndex, setMainSection, type MainSection } from "../store/uiSlice"
-import SegmentedControl from "../components/SegmentedControl/SegmentedControl"
+import { setRegion, setCountryOrProgram, setUnifiedSelection, setOpenFaqIndex } from "../store/uiSlice"
 
 // France: What makes Leap Scholar different?
 const leapStatsFrance = [
@@ -499,7 +498,6 @@ export default function HomePage() {
   const countryOrProgram = useSelector<RootState, string>((state) => state.ui.countryOrProgram)
   const unifiedSelection = useSelector<RootState, UnifiedSelection>((state) => state.ui.unifiedSelection)
   const openFaq = useSelector<RootState, number | null>((state) => state.ui.openFaqIndex)
-  const mainSection = useSelector<RootState, string>((state) => state.ui.mainSection)
 
   // Modal state for add-ons
   const [openAddOnsModal, setOpenAddOnsModal] = useState<number | null>(null)
@@ -548,40 +546,6 @@ export default function HomePage() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }, [])
 
-  // Function to handle segmented control option clicks and scroll to respective sections
-  const handleSegmentedControlClick = (value: string) => {
-    setTimeout(() => {
-      let targetSection: string
-      let headerOffset: number
-
-      switch (value) {
-        case "plans":
-          targetSection = "plans"
-          headerOffset = 120 // Increased offset for plans section to appear below header
-          break
-        case "testimonials":
-          targetSection = "testimonials"
-          headerOffset = 80 // Standard header height
-          break
-        case "faqs":
-          targetSection = "faqs"
-          headerOffset = 80 // Standard header height
-          break
-        default:
-          return
-      }
-
-      const sectionElement = document.querySelector(`[data-section="${targetSection}"]`) as HTMLElement
-      if (sectionElement) {
-        const elementTop = sectionElement.offsetTop
-        window.scrollTo({
-          top: elementTop - headerOffset,
-          behavior: "smooth",
-        })
-      }
-    }, 100)
-  }
-
   // New unified options for the 4-button layout
   const unifiedOptions = [
     { key: 'usa-unified', label: '🇺🇸 UG/MBA/MS', icon: '🇺🇸' },
@@ -619,6 +583,7 @@ export default function HomePage() {
   let leapStats = leapStatsGermany
   let testimonials = testimonialsGermany
   let faqs = faqsGermany
+  let steps = stepsFrance // Default to France steps
 
   switch (unifiedSelection) {
     case 'usa-unified':
@@ -626,21 +591,25 @@ export default function HomePage() {
       leapStats = leapStatsGermany // USA doesn't have separate stats, use default
       testimonials = testimonialsUSAUG
       faqs = faqsGermany // USA doesn't have separate FAQs, use default
+      steps = stepsFrance // Use France steps as default
       break
     case 'germany':
       leapStats = leapStatsGermany
       testimonials = testimonialsGermany
       faqs = faqsGermany
+      steps = stepsFrance // Use France steps for now
       break
     case 'france':
       leapStats = leapStatsFrance
       testimonials = testimonialsFrance
       faqs = faqsFrance
+      steps = stepsFrance
       break
     case 'rest-of-europe':
       leapStats = leapStatsRestOfEurope
       testimonials = testimonialsRestOfEurope
       faqs = faqsRestOfEurope
+      steps = stepsFrance // Use France steps for now
       break
   }
 
@@ -667,18 +636,21 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-white min-w-full">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-[#F4F3FF] to-white pt-10 md:pt-20 pb-8 md:pb-16 text-center flex flex-col items-center">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight mb-4 md:mb-6 font-heading px-4">
+      <section className="bg-gradient-to-b from-[#F4F3FF] to-white pt-16 md:pt-24 pb-12 md:pb-20 text-center flex flex-col items-center">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3 md:mb-4 font-heading px-6">
           LEAP SCHOLAR{" "}
           <span className="bg-gradient-to-r from-[#5B5FE3] to-[#FF6B35] bg-clip-text text-transparent">PREMIUM</span>
         </h1>
-        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-600 mb-6 md:mb-10 max-w-2xl mx-auto font-body px-4">
-          The premium service which helps you land your dream College
+        <p className="text-sm sm:text-base md:text-lg text-gray-500 mb-4 md:mb-6 max-w-2xl mx-auto font-body px-6">
+          The premium service which
         </p>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-8 md:mb-12 max-w-6xl mx-auto font-body px-6 leading-normal whitespace-nowrap bg-gradient-to-r from-[#5B5FE3] to-[#FF6B35] bg-clip-text text-transparent pb-2">
+          helps you land your dream College
+        </h2>
         
-        {/* Unified Selector - 4 buttons */}
-        <div className="flex justify-center mb-8" data-section="unified-selector">
-          <div className="inline-flex gap-2 bg-transparent rounded-xl p-1 flex-wrap justify-center">
+        {/* Unified Selector - 4 buttons with HGI iOS spacing */}
+        <div className="flex justify-center mb-12 md:mb-16" data-section="unified-selector">
+          <div className="inline-flex gap-3 bg-white/70 backdrop-blur-xl rounded-2xl p-2 flex-wrap justify-center shadow-lg shadow-black/5 border border-white/20">
             {unifiedOptions.map((option, idx: number) => (
               <button
                 key={option.key}
@@ -686,11 +658,15 @@ export default function HomePage() {
                   optionBtnRefs.current[idx] = el
                   return undefined
                 }}
-                className={`px-4 py-3 rounded-xl font-semibold text-sm sm:text-base focus:outline-none transition-colors duration-200
-                  ${unifiedSelection === option.key ? "bg-[#443EFF] text-white" : "bg-gray-100 text-[#443EFF]"}
+                className={`px-6 py-4 rounded-xl font-semibold text-sm sm:text-base focus:outline-none transition-all duration-300 ease-out transform
+                  ${unifiedSelection === option.key 
+                    ? "bg-[#443EFF] text-white shadow-lg shadow-[#443EFF]/30 scale-105" 
+                    : "bg-white/80 text-[#443EFF] hover:bg-white hover:shadow-md hover:scale-102"
+                  }
                 `}
                 onClick={() => {
                   dispatch(setUnifiedSelection(option.key as UnifiedSelection))
+                  // Auto-scroll to content sections after selection
                   setTimeout(() => {
                     if (segmentedControlRef.current) {
                       const headerHeight = 80
@@ -711,29 +687,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Segmented Control for main content */}
-      <div className="py-8" ref={segmentedControlRef}>
-        <SegmentedControl
-          options={[
-            { label: "Plans", value: "plans" },
-            { label: "Testimonials", value: "testimonials" },
-            { label: "FAQs", value: "faqs" },
-          ]}
-          value={mainSection}
-          onChange={(val) => dispatch(setMainSection(val as MainSection))}
-          onOptionClick={handleSegmentedControlClick}
-        />
-      </div>
       {/* Main Content Sections */}
-      {mainSection === "plans" && (
-        <>
-          {/* Plan Selection */}
-          <section
-            className="py-12 md:py-20 bg-gradient-to-br from-gray-50/50 to-white"
-            data-section="plans"
-          >
-            <div className="flex flex-col items-center">
-              {/* Plans Grid */}
+      {/* Plan Selection */}
+      <section
+        className="py-16 md:py-24 bg-gradient-to-br from-gray-50/50 to-white"
+        data-section="plans"
+      >
+            <div className="flex flex-col items-center px-6">
+              {/* Plans Grid with HGI iOS spacing */}
               <div
                 className={`grid gap-8 w-full justify-center items-stretch mx-auto ${
                   numPlans === 4
@@ -744,30 +705,30 @@ export default function HomePage() {
                         ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2"
                         : "grid-cols-1"
                 }`}
-                style={{ maxWidth: numPlans === 4 ? "1200px" : numPlans === 3 ? "900px" : "600px" }}
+                style={{ maxWidth: numPlans === 4 ? "1280px" : numPlans === 3 ? "960px" : "640px" }}
               >
                 {plans.map((plan, index) => (
                   <div
                     key={plan.tier + index}
-                    className={`relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-primary/5 border border-white/30 transition-all duration-500 hover:-translate-y-3 hover:shadow-3xl hover:shadow-primary/15 hover:scale-[1.02] group ${plan.tier === "LS Elite" ? "ring-4 ring-primary/20 bg-gradient-to-br from-white/95 to-primary/5" : "bg-white/95"}`}
+                    className={`relative bg-white/95 backdrop-blur-xl rounded-3xl shadow-xl shadow-black/8 border border-white/40 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/12 hover:scale-[1.02] group ${plan.tier === "LS Elite" ? "ring-2 ring-primary/30 bg-gradient-to-br from-white/98 to-primary/8" : "bg-white/95"}`}
                   >
                     {plan.tier === "LS Elite" && (
-                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 flex justify-center w-full">
-                        <span className="bg-gradient-to-r from-primary to-secondary text-white px-6 py-2.5 rounded-full text-sm font-black shadow-xl whitespace-nowrap">
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 flex justify-center w-full">
+                        <span className="bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-2xl text-sm font-bold shadow-lg shadow-primary/30 whitespace-nowrap">
                           {getMostPopularTag(unifiedSelection)}
                         </span>
                       </div>
                     )}
-                    <div className="p-6 md:p-8 flex flex-col items-center">
-                      <div className="text-center mb-6 md:mb-8">
-                        <h3 className="text-xl md:text-2xl font-black text-gray-900 mb-3 md:mb-4 font-heading tracking-tight">
+                    <div className="p-8 md:p-10 flex flex-col items-center">
+                      <div className="text-center mb-8 md:mb-10">
+                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 font-heading tracking-tight">
                           {plan.tier}
                         </h3>
-                        <div className="flex flex-col items-center justify-center mb-2 md:mb-3">
-                          <span className={`text-3xl md:text-5xl font-black tracking-tight ${plan.tier === "LS Elite" ? "text-primary" : "text-gray-900"}`}>
+                        <div className="flex flex-col items-center justify-center mb-3 md:mb-4">
+                          <span className={`text-4xl md:text-5xl font-bold tracking-tight ${plan.tier === "LS Elite" ? "text-primary" : "text-gray-900"}`}>
                             ₹{plan.priceRange[0].toLocaleString("en-IN")}
                           </span>
-                          <span className="text-base md:text-lg text-gray-400 line-through mt-1 font-medium">
+                          <span className="text-base md:text-lg text-gray-400 line-through mt-2 font-medium">
                             ₹{plan.priceRange[1].toLocaleString("en-IN")}
                           </span>
                         </div>
@@ -879,51 +840,95 @@ export default function HomePage() {
           </section>
 
           {/* Stats Section */}
-          <section className="py-16 bg-[#3B5AFE]">
-            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-10 text-white font-heading px-4">
-              What makes Leap Scholar different?
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center px-4 max-w-7xl mx-auto">
-              {leapStats.map((stat: { value: string; label: string }, index: number) => (
-                <div
-                  key={index}
-                  className="bg-white bg-opacity-60 rounded-2xl shadow-md p-8 flex flex-col items-center justify-center min-h-[140px]"
-                >
-                  <div className="text-3xl sm:text-4xl font-extrabold mb-2 text-[#3B5AFE]">{stat.value}</div>
-                  <div className="text-base sm:text-lg text-[#3B5AFE] font-medium opacity-80">{stat.label}</div>
-                </div>
-              ))}
+          <section className="py-16 md:py-24 bg-gradient-to-br from-[#3B5AFE] via-[#4C67FF] to-[#5B78FF]">
+            <div className="max-w-7xl mx-auto px-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 md:mb-16 text-white font-heading tracking-tight drop-shadow-sm">
+                What makes{" "}
+                <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent font-extrabold">
+                  Leap Scholar
+                </span>{" "}
+                different?
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                {leapStats.map((stat: { value: string; label: string }, index: number) => (
+                  <div
+                    key={index}
+                    className="bg-white/20 backdrop-blur-xl rounded-3xl shadow-xl border border-white/30 p-6 md:p-8 flex flex-col items-center justify-center min-h-[160px] md:min-h-[180px] hover:bg-white/25 hover:scale-105 transition-all duration-300 group"
+                  >
+                    <div className="text-3xl md:text-4xl lg:text-5xl font-black mb-3 text-white drop-shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      {stat.value}
+                    </div>
+                    <div className="text-sm md:text-base lg:text-lg text-white/90 font-semibold text-center leading-relaxed">
+                      {stat.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
-        </>
-      )}
-      {mainSection === "testimonials" && (
-        <>
-          {/* Testimonials - Auto-scrolling Carousel */}
-          <section className="py-16 bg-white" data-section="testimonials">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 font-heading px-4">
-              See why our students ❤ us
-            </h2>
-            <div className="relative">
-              <AutoScrollTestimonials testimonials={testimonials} />
-            </div>
-          </section>
-        </>
-      )}
 
-      {mainSection === "faqs" && (
-        <>
-          {/* FAQ Section - HGI iOS Glassmorphism Accordion */}
-          <section className="py-16 bg-gradient-to-br from-[#F4F3FF] to-white/80" data-section="faqs">
-            <div className="flex justify-center px-4 max-w-5xl mx-auto">
-              <div className="max-w-3xl w-full">
-              <h2 className="text-4xl font-extrabold text-center mb-14 text-gray-900 font-heading tracking-tight drop-shadow-sm">
-                Got questions?{" "}
-                <span className="bg-gradient-to-r from-[#443EFF] to-[#FF6B35] bg-clip-text text-transparent">
-                  Find your answers here
+          {/* Study Abroad Journey Section */}
+          <section className="py-16 md:py-24 bg-gradient-to-br from-white via-gray-50/30 to-blue-50/20">
+            <div className="max-w-7xl mx-auto px-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 md:mb-16 text-gray-900 font-heading tracking-tight">
+                Your{" "}
+                <span className="bg-gradient-to-r from-[#443EFF] to-[#FF6B35] bg-clip-text text-transparent font-extrabold">
+                  Study Abroad Journey
                 </span>
               </h2>
-              <div className="space-y-7">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                {steps.map((step, index) => (
+                  <div key={index} className="text-center group">
+                    <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-xl border border-gray-100/50 hover:shadow-2xl hover:scale-105 transition-all duration-300 mb-6">
+                      <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <span className="text-white font-black text-2xl md:text-3xl">{index + 1}</span>
+                      </div>
+                      <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 group-hover:text-primary transition-colors duration-300">
+                        {step.title}
+                      </h3>
+                      <div className="space-y-3">
+                        {step.items.map((item, itemIndex) => (
+                          <div key={itemIndex} className="text-left">
+                            <h4 className="font-bold text-gray-800 mb-1">{item.name}</h4>
+                            <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Testimonials - Auto-scrolling Carousel */}
+          <section className="py-16 md:py-24 bg-gradient-to-br from-gray-50 via-white to-blue-50/30" data-section="testimonials">
+            <div className="max-w-7xl mx-auto px-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 md:mb-16 text-gray-900 font-heading tracking-tight">
+                See why our students{" "}
+                <span className="text-red-500 text-4xl md:text-5xl">❤</span>{" "}
+                <span className="bg-gradient-to-r from-[#443EFF] to-[#FF6B35] bg-clip-text text-transparent font-extrabold">
+                  us
+                </span>
+              </h2>
+              <div className="relative">
+                <AutoScrollTestimonials testimonials={testimonials} />
+              </div>
+            </div>
+          </section>
+
+
+          {/* FAQ Section - HGI iOS Glassmorphism Accordion */}
+          <section className="py-16 md:py-24 bg-gradient-to-br from-[#F8F7FF] via-white to-blue-50/40" data-section="faqs">
+            <div className="max-w-5xl mx-auto px-4">
+              <div className="max-w-3xl w-full mx-auto">
+                <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 md:mb-16 text-gray-900 font-heading tracking-tight drop-shadow-sm">
+                  Got questions?{" "}
+                  <span className="bg-gradient-to-r from-[#443EFF] to-[#FF6B35] bg-clip-text text-transparent font-extrabold">
+                    Find your answers here
+                  </span>
+                </h2>
+                <div className="space-y-4 md:space-y-6">
                 {faqs.map((faq, index) => {
                   const isOpen = openFaq === index
                   return (
@@ -964,145 +969,178 @@ export default function HomePage() {
                     </div>
                   )
                 })}
+                </div>
               </div>
-            </div>
             </div>
           </section>
-        </>
-      )}
 
-      {/* Trust Section */}
-      <section className="py-16 bg-white">
-        <div className="text-center px-4 max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold mb-8 text-gray-900 font-heading">
-            Trusted and backed by marquee global investors
-          </h2>
-          <div className="flex flex-wrap justify-center items-center gap-8 opacity-80">
-            {investors.map((inv, idx) => (
-              <div key={idx} className="flex flex-col items-center w-36">
-                <div className="w-32 h-16 flex items-center justify-center mb-2">
-                  <Image
-                    src={inv.img || "/placeholder.svg"}
-                    alt={inv.name}
-                    width={128}
-                    height={64}
-                    className="object-contain"
-                  />
+          {/* Trust Section */}
+          <section className="py-16 md:py-24 bg-gradient-to-br from-white via-gray-50/30 to-blue-50/20">
+            <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-10 md:mb-16 text-gray-900 font-heading tracking-tight">
+              Trusted and backed by{" "}
+              <span className="bg-gradient-to-r from-[#443EFF] to-[#FF6B35] bg-clip-text text-transparent font-extrabold">
+                marquee global investors
+              </span>
+            </h2>
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+              {investors.map((inv, idx) => (
+                <div key={idx} className="flex flex-col items-center w-32 md:w-40 group hover:scale-105 transition-all duration-300">
+                  <div className="w-28 md:w-36 h-14 md:h-18 flex items-center justify-center mb-3 p-4 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100/50 group-hover:shadow-xl group-hover:bg-white/90 transition-all duration-300">
+                    <Image
+                      src={inv.img || "/placeholder.svg"}
+                      alt={inv.name}
+                      width={128}
+                      height={64}
+                      className="object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                    />
+                  </div>
+                  <span className="text-xs md:text-sm text-gray-600 font-semibold text-center leading-tight group-hover:text-gray-800 transition-colors duration-300">
+                    {inv.name}
+                  </span>
                 </div>
-                <span className="text-xs text-gray-500 font-semibold text-center leading-tight">{inv.name}</span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-[#3B5AFE] text-center">
-        <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6 font-heading">Ready to start your journey?</h2>
-          <p className="text-lg sm:text-xl text-white/90 mb-10 font-body">
+          {/* CTA Section */}
+      <section className="py-20 md:py-28 bg-gradient-to-br from-[#3B5AFE] via-[#4C67FF] to-[#5B78FF] text-center relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-72 h-72 bg-white rounded-full -translate-x-36 -translate-y-36"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full translate-x-48 translate-y-48"></div>
+        </div>
+        
+        <div className="max-w-4xl mx-auto px-4 relative z-10">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 md:mb-8 font-heading tracking-tight">
+            Ready to start your{" "}
+            <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent font-extrabold">
+              journey
+            </span>
+            ?
+          </h2>
+          <p className="text-xl md:text-2xl text-white/90 mb-12 md:mb-16 font-medium leading-relaxed max-w-2xl mx-auto">
             Join thousands of students who have successfully studied abroad with Leap Scholar
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button className="bg-white text-[#3B5AFE] px-8 py-4 rounded-xl font-bold text-lg shadow-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-200">
-              Get Free Consultation
+          <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-6">
+            <button className="bg-white/95 backdrop-blur-sm text-[#3B5AFE] px-8 md:px-10 py-4 md:py-5 rounded-2xl font-bold text-lg md:text-xl shadow-xl border border-white/50 hover:bg-white hover:scale-105 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-white/30 transition-all duration-300 group">
+              <span className="group-hover:scale-105 inline-block transition-transform duration-300">
+                Get Free Consultation
+              </span>
             </button>
-            <button className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-[#3B5AFE] focus:outline-none focus:ring-2 focus:ring-white transition-all duration-200">
-              View All Plans
+            <button className="bg-transparent border-2 border-white/80 text-white px-8 md:px-10 py-4 md:py-5 rounded-2xl font-bold text-lg md:text-xl backdrop-blur-sm hover:bg-white/10 hover:border-white hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white/30 transition-all duration-300 group">
+              <span className="group-hover:scale-105 inline-block transition-transform duration-300">
+                View All Plans
+              </span>
             </button>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="px-4 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center mb-4">
-                <GraduationCap className="w-8 h-8 text-primary mr-2" />
-                <span className="text-2xl font-bold font-heading">LEAP SCHOLAR</span>
+      <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-16 md:py-20">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-12">
+            <div className="md:col-span-1">
+              <div className="flex items-center mb-6">
+                <div className="p-2 bg-primary/20 backdrop-blur-sm rounded-2xl mr-3">
+                  <GraduationCap className="w-8 h-8 text-primary" />
+                </div>
+                <span className="text-2xl md:text-3xl font-bold font-heading bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                  LEAP SCHOLAR
+                </span>
               </div>
-              <p className="text-gray-400 font-body">Your trusted partner for studying abroad</p>
+              <p className="text-gray-400 font-medium leading-relaxed text-lg">
+                Your trusted partner for studying abroad
+              </p>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-4 font-heading">Destinations</h4>
-              <ul className="space-y-2 text-gray-400 font-body">
+              <h4 className="text-lg md:text-xl font-bold mb-6 font-heading text-white">Destinations</h4>
+              <ul className="space-y-3 text-gray-400 font-medium">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Germany
+                  <a href="#" className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+                    🇩🇪 Germany
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    France
+                  <a href="#" className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+                    🇫🇷 France
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    USA
+                  <a href="#" className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+                    🇺🇸 USA
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Rest of Europe
+                  <a href="#" className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+                    🇪🇺 Rest of Europe
                   </a>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-4 font-heading">Services</h4>
-              <ul className="space-y-2 text-gray-400 font-body">
+              <h4 className="text-lg md:text-xl font-bold mb-6 font-heading text-white">Services</h4>
+              <ul className="space-y-3 text-gray-400 font-medium">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    IELTS Preparation
+                  <a href="#" className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+                    📚 IELTS Preparation
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    SOP Writing
+                  <a href="#" className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+                    ✍️ SOP Writing
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Visa Guidance
+                  <a href="#" className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+                    🛂 Visa Guidance
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Loan Assistance
+                  <a href="#" className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+                    💰 Loan Assistance
                   </a>
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-4 font-heading">Support</h4>
-              <ul className="space-y-2 text-gray-400 font-body">
+              <h4 className="text-lg md:text-xl font-bold mb-6 font-heading text-white">Support</h4>
+              <ul className="space-y-3 text-gray-400 font-medium">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Contact Us
+                  <a href="#" className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+                    📞 Contact Us
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    FAQs
+                  <a href="#" className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+                    ❓ FAQs
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Privacy Policy
+                  <a href="#" className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+                    🔒 Privacy Policy
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Terms & Conditions
+                  <a href="#" className="hover:text-white hover:translate-x-1 transition-all duration-300 inline-block">
+                    📋 Terms & Conditions
                   </a>
                 </li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-gray-400 font-body">
-            <p>&copy; 2025 Leap Scholar. All rights reserved.</p>
+          <div className="border-t border-gray-700/50 pt-8 md:pt-10 text-center">
+            <p className="text-gray-400 font-medium text-lg">
+              &copy; 2025{" "}
+              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent font-bold">
+                Leap Scholar
+              </span>
+              . All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
