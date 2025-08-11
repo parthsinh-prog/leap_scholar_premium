@@ -661,18 +661,7 @@ export default function HomePage() {
 
   // Function to get the "Most Popular" tag based on selected destination
   const getMostPopularTag = (selection: UnifiedSelection) => {
-    switch (selection) {
-      case 'usa-unified':
-        return 'LS Elite of USA'
-      case 'germany':
-        return 'LS Elite of Germany'
-      case 'france':
-        return 'LS Elite of France'
-      case 'rest-of-europe':
-        return 'LS Elite of Rest of Europe'
-      default:
-        return 'Most Popular'
-    }
+    return 'Most Popular'
   }
 
   return (
