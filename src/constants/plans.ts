@@ -13,6 +13,8 @@ export interface CreditBreakdown {
   ielts?: number;
   aps?: number;
   flight?: number;
+  germanLanguagePrep?: number;
+  campusFrance?: number;
 }
 
 export interface Plan {
@@ -52,7 +54,7 @@ export const plansData: {
           sopLorSupport: 'Dedicated expert SOP, LOR writer',
           visaSupport: 'End-to-End APS and Visa Guidance',
           scholarshipSupport: 'Scholarship and Loan assistance',
-          accommodationSupport: true,
+          accommodationSupport: false,
           creditTotal: 5000,
           creditBreakdown: {
             loanProcessing: 2000,
@@ -75,7 +77,10 @@ export const plansData: {
             universityDeposit: 5000,
             accommodation: 5000,
           },
-          addOns: ['3 additional Applications for ₹25,000'],
+          addOns: [
+            '3 additional Applications for ₹25,000',
+            'A1-A2 German Language Prep Enrollment for ₹40,000'
+          ],
         },
         {
           tier: 'LS Elite',
@@ -93,7 +98,7 @@ export const plansData: {
             universityDeposit: 10000,
             accommodation: 10000,
           },
-          addOns: ['A1-A2 German Language Prep Enrollment for  ₹40,000'],
+          addOns: ['A1-A2 German Language Prep Enrollment for ₹40,000'],
         },
         {
           tier: 'LS Platinum',
@@ -112,14 +117,9 @@ export const plansData: {
             accommodation: 10000,
             ielts: 17000,
             aps: 18000,
+            germanLanguagePrep: 40000,
             flight: 30000,
           },
-          addOns: [
-            'A1-A2 German Language Prep Enrollment for  ₹40,000',
-            '₹18,000 on APS',
-            '₹40,000 on A1-A2 German Language Prep Enrollment',
-            '₹30,000 on One-way Flight Ticket to Germany',
-          ],
         },
       ],
     },
@@ -133,9 +133,9 @@ export const plansData: {
           counsellor: 'Europe Expert Counsellor',
           ielts: 'Self-prep IELTS course with mock tests',
           sopLorSupport: 'Dedicated expert SOP, LOR writer',
-          visaSupport: 'End-to-End APS and Visa Guidance',
+          visaSupport: 'Campus France Guidance',
           scholarshipSupport: 'Scholarship and Loan assistance',
-          accommodationSupport: true,
+          accommodationSupport: false,
           creditTotal: 5000,
           creditBreakdown: {
             loanProcessing: 2000,
@@ -144,12 +144,12 @@ export const plansData: {
         },
         {
           tier: 'LS Premium',
-          priceRange: [49999, 75000],
+          priceRange: [34999, 75000],
           applications: 'Upto 3 Applications',
           counsellor: 'Dedicated Senior Counsellor',
           ielts: 'IELTS Prep with Band Assurance',
           sopLorSupport: 'Dedicated Premium SOP, LOR editor',
-          visaSupport: 'End-to-End APS and Visa Guidance',
+          visaSupport: 'Campus France Guidance',
           scholarshipSupport: 'Scholarship and Loan Support',
           accommodationSupport: true,
           creditTotal: 15000,
@@ -162,12 +162,12 @@ export const plansData: {
         },
         {
           tier: 'LS Elite',
-          priceRange: [119999, 150000],
+          priceRange: [69999, 150000],
           applications: 'Unlimited Applications',
           counsellor: 'Dedicated Lead Counsellor',
           ielts: 'IELTS Prep with Band Assurance',
           sopLorSupport: 'Dedicated Premium SOP, LOR editor',
-          visaSupport: 'End-to-End APS and Visa Guidance',
+          visaSupport: 'Campus France Guidance',
           scholarshipSupport: 'Scholarship and Loan Support',
           accommodationSupport: true,
           creditTotal: 30000,
@@ -189,9 +189,9 @@ export const plansData: {
           counsellor: 'Europe Expert Counsellor',
           ielts: 'Self-prep IELTS course with mock tests',
           sopLorSupport: 'Dedicated expert SOP, LOR writer',
-          visaSupport: 'End-to-End APS and Visa Guidance',
+          visaSupport: 'End-to-End Visa Guidance',
           scholarshipSupport: 'Scholarship and Loan assistance',
-          accommodationSupport: true,
+          accommodationSupport: false,
           creditTotal: 5000,
           creditBreakdown: {
             loanProcessing: 2000,
@@ -200,12 +200,12 @@ export const plansData: {
         },
         {
           tier: 'LS Premium',
-          priceRange: [34999, 50000],
-          applications: 'Up to 3 Applications',
+          priceRange: [34999, 75000],
+          applications: 'Upto 3 Applications',
           counsellor: 'Dedicated Senior Counsellor',
           ielts: 'IELTS Prep with Band Assurance',
           sopLorSupport: 'Dedicated Premium SOP, LOR editor',
-          visaSupport: 'End-to-End APS and Visa Guidance',
+          visaSupport: 'End-to-End Visa Guidance',
           scholarshipSupport: 'Scholarship and Loan Support',
           accommodationSupport: true,
           creditTotal: 15000,
@@ -214,11 +214,12 @@ export const plansData: {
             universityDeposit: 5000,
             accommodation: 5000,
           },
+          addOns: ['3 additional Applications for ₹25,000'],
         },
         {
           tier: 'LS Elite',
           priceRange: [99999, 125000],
-          applications: 'Unlimited Applications',
+          applications: 'Apply to Public Universities with Admission Guarantee',
           counsellor: 'Dedicated Lead Counsellor',
           ielts: 'IELTS Prep with Band Assurance',
           sopLorSupport: 'Dedicated Premium SOP, LOR editor',
@@ -362,7 +363,7 @@ export const unifiedPlansData: Record<UnifiedSelection, CountryOrProgram> = {
     plans: [
       {
         tier: 'LS Premium',
-        priceRange: [34999, 50000],
+        priceRange: [34999, 75000],
         applications: 'Upto 3 Applications',
         counsellor: 'Dedicated Senior Counsellor',
         ielts: 'IELTS Prep with Band Assurance',
@@ -370,16 +371,17 @@ export const unifiedPlansData: Record<UnifiedSelection, CountryOrProgram> = {
         visaSupport: 'End-to-End Visa Application and Interview Guidance',
         scholarshipSupport: 'Scholarship and Loan Support',
         accommodationSupport: true,
-        creditTotal: 10000,
+        creditTotal: 15000,
         creditBreakdown: {
           loanProcessing: 5000,
           universityDeposit: 5000,
+          accommodation: 5000,
         },
-        addOns: ['3 additional Applications for ₹22,500'],
+        addOns: ['3 additional Applications for ₹25,000'],
       },
       {
         tier: 'LS Elite',
-        priceRange: [69999, 100000],
+        priceRange: [69999, 150000],
         applications: 'Upto 7 Applications',
         counsellor: 'Dedicated Lead Counsellor',
         ielts: 'IELTS Prep with Band Assurance',
@@ -387,13 +389,32 @@ export const unifiedPlansData: Record<UnifiedSelection, CountryOrProgram> = {
         visaSupport: 'End-to-End Visa Application and Interview Guidance',
         scholarshipSupport: 'Scholarship and Loan Support',
         accommodationSupport: true,
-        creditTotal: 20000,
+        creditTotal: 30000,
         creditBreakdown: {
           loanProcessing: 10000,
-          universityDeposit: 5000,
-          accommodation: 5000,
+          universityDeposit: 10000,
+          accommodation: 10000,
         },
-        addOns: ['3 additional Applications for ₹22,500'],
+        addOns: ['3 additional Applications for ₹25,000'],
+      },
+      {
+        tier: 'LS Platinum',
+        priceRange: [279999, 350000],
+        applications: 'Unlimited Applications',
+        counsellor: 'Dedicated Lead Counsellor',
+        ielts: 'IELTS Prep with Band Assurance',
+        sopLorSupport: 'Dedicated Premium Essay SOP, LOR editor',
+        visaSupport: 'End-to-End Visa Application and Interview Guidance',
+        scholarshipSupport: 'Scholarship and Loan Support',
+        accommodationSupport: true,
+        creditTotal: 90000,
+        creditBreakdown: {
+          loanProcessing: 10000,
+          universityDeposit: 10000,
+          accommodation: 10000,
+          ielts: 20000,
+          flight: 40000,
+        },
       },
     ],
   },

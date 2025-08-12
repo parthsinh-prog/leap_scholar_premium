@@ -655,8 +655,8 @@ export default function HomePage() {
         </h2>
         
         {/* Unified Selector - 4 buttons with HGI iOS spacing */}
-        <div className="flex justify-center mb-12 md:mb-16" data-section="unified-selector">
-          <div className="inline-flex gap-3 bg-white/70 backdrop-blur-xl rounded-2xl p-2 flex-wrap justify-center shadow-lg shadow-black/5 border border-white/20">
+        <div className="flex justify-center mb-6" data-section="unified-selector">
+          <div className="inline-flex gap-3 rounded-2xl p-2 flex-wrap justify-center">
             {unifiedOptions.map((option, idx: number) => (
               <button
                 key={option.key}
@@ -696,7 +696,7 @@ export default function HomePage() {
       {/* Main Content Sections */}
       {/* Plan Selection */}
       <section
-        className="py-16 md:py-24 bg-gradient-to-br from-gray-50/50 to-white"
+        className="py-8 md:py-12 bg-gradient-to-br from-gray-50/50 to-white"
         data-section="plans"
       >
             <div className="flex flex-col items-center px-6">
@@ -767,7 +767,7 @@ export default function HomePage() {
                         <div className="flex items-start group/item">
                           <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
                           <span className="text-gray-700 font-medium leading-relaxed">
-                            Accommodation Support: {plan.accommodationSupport ? "Yes" : "No"}
+                            {plan.accommodationSupport ? "Access to Accommodation and Forex Partners" : "No Accommodation and Forex Support"}
                           </span>
                         </div>
                       </div>
