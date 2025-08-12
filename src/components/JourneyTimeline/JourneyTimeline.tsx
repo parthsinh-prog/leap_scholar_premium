@@ -133,24 +133,24 @@ const VerticalTimelineStep: React.FC<VerticalTimelineStepProps> = ({
             onMouseLeave={() => setIsHovered(false)}
           >
             <div className={`relative bg-white/95 backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-xl border border-white/50 transition-all duration-500 overflow-hidden ${
-              isHovered ? 'shadow-2xl scale-105 border-[#443EFF]/20' : ''
+              isHovered ? 'shadow-2xl scale-105 border-[#6F5ACC]/20' : ''
             }`}>
               {/* Gradient Background Overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-br from-[#443EFF]/5 to-[#FF6B35]/5 rounded-3xl transition-opacity duration-500 ${
+              <div className={`absolute inset-0 bg-gradient-to-br from-[#6F5ACC]/5 to-[#A291FB]/5 rounded-3xl transition-opacity duration-500 ${
                 isHovered ? 'opacity-100' : 'opacity-0'
               }`} />
               
-              {/* Step Number Badge */}
-              <div className={`absolute ${isLeft ? '-right-4' : '-left-4'} top-6 w-12 h-12 bg-gradient-to-br from-[#443EFF] to-[#FF6B35] rounded-full flex items-center justify-center text-white font-bold shadow-lg transition-all duration-300 ${
+              {/* Step Number Badge - Positioned to avoid text overlap with HGI iOS spacing */}
+              <div className={`absolute ${isLeft ? 'right-4 top-4' : 'left-4 top-4'} w-10 h-10 bg-gradient-to-br from-[#6F5ACC] to-[#A291FB] rounded-full flex items-center justify-center text-white font-bold shadow-lg transition-all duration-300 z-10 ${
                 isHovered ? 'scale-110 shadow-xl' : ''
               }`}>
                 {stepNumber}
               </div>
               
               {/* Content */}
-              <div className="relative z-10 pr-8">
+              <div className={`relative z-10 ${isLeft ? 'pr-16' : 'pl-16'}`}>
                 <h3 className={`text-xl md:text-2xl font-bold mb-4 transition-all duration-300 ${
-                  isHovered ? 'text-[#443EFF] transform scale-105' : 'text-gray-900'
+                  isHovered ? 'text-[#6F5ACC] transform scale-105' : 'text-gray-900'
                 }`}>
                   {step.title}
                 </h3>
@@ -166,7 +166,7 @@ const VerticalTimelineStep: React.FC<VerticalTimelineStepProps> = ({
                     >
                       <div className="flex items-start space-x-3">
                         <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 transition-all duration-300 ${
-                          isHovered ? 'bg-gradient-to-r from-[#443EFF] to-[#FF6B35] scale-125' : 'bg-gray-400'
+                          isHovered ? 'bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] scale-125' : 'bg-gray-400'
                         }`} />
                         <div className="flex-1">
                           <h4 className="font-semibold text-gray-800 mb-1 text-sm md:text-base">{item.name}</h4>
@@ -191,12 +191,12 @@ const VerticalTimelineStep: React.FC<VerticalTimelineStepProps> = ({
           <div 
             className={`w-16 h-16 bg-white border-4 border-gray-200 rounded-full flex items-center justify-center shadow-lg transition-all duration-600 ${
               isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75'
-            } ${isHovered ? 'shadow-xl scale-110 border-[#443EFF]/30' : ''}`}
+            } ${isHovered ? 'shadow-xl scale-110 border-[#6F5ACC]/30' : ''}`}
             style={{ transitionDelay: `${delay + 100}ms` }}
           >
             <div 
               className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white text-sm transition-all duration-300 ${
-                isVisible ? 'bg-gradient-to-br from-[#443EFF] to-[#FF6B35]' : 'bg-gray-300'
+                isVisible ? 'bg-gradient-to-br from-[#6F5ACC] to-[#A291FB]' : 'bg-gray-300'
               } ${isHovered ? 'scale-110' : ''}`}
             >
               {stepNumber}
@@ -207,7 +207,7 @@ const VerticalTimelineStep: React.FC<VerticalTimelineStepProps> = ({
           {isVisible && (
             <>
               <div 
-                className="absolute inset-0 w-16 h-16 rounded-full bg-[#443EFF]/20 animate-pulse-ring"
+                className="absolute inset-0 w-16 h-16 rounded-full bg-[#6F5ACC]/20 animate-pulse-ring"
                 style={{ 
                   animationDelay: `${delay + 400}ms`,
                   animationDuration: '2s'
@@ -236,7 +236,7 @@ const VerticalTimelineStep: React.FC<VerticalTimelineStepProps> = ({
             style={{ transitionDelay: `${delay}ms` }}
           >
             <div className={`w-6 h-6 rounded-full flex items-center justify-center font-bold text-white text-xs transition-all duration-300 ${
-              isVisible ? 'bg-gradient-to-br from-[#443EFF] to-[#FF6B35]' : 'bg-gray-300'
+              isVisible ? 'bg-gradient-to-br from-[#6F5ACC] to-[#A291FB]' : 'bg-gray-300'
             }`}>
               {stepNumber}
             </div>
@@ -246,19 +246,19 @@ const VerticalTimelineStep: React.FC<VerticalTimelineStepProps> = ({
           <div 
             className={`flex-1 bg-white/95 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/50 transition-all duration-600 relative overflow-hidden ${
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
-            } ${isHovered ? 'shadow-2xl scale-105 border-[#443EFF]/20' : ''}`}
+            } ${isHovered ? 'shadow-2xl scale-105 border-[#6F5ACC]/20' : ''}`}
             style={{ transitionDelay: `${delay + 100}ms` }}
             onTouchStart={() => setIsHovered(true)}
             onTouchEnd={() => setIsHovered(false)}
           >
             {/* Gradient Background */}
-            <div className={`absolute inset-0 bg-gradient-to-br from-[#443EFF]/5 to-[#FF6B35]/5 rounded-3xl transition-opacity duration-500 ${
+            <div className={`absolute inset-0 bg-gradient-to-br from-[#6F5ACC]/5 to-[#A291FB]/5 rounded-3xl transition-opacity duration-500 ${
               isHovered ? 'opacity-100' : 'opacity-0'
             }`} />
             
             <div className="relative z-10">
               <h3 className={`text-lg font-bold mb-4 transition-all duration-300 ${
-                isHovered ? 'text-[#443EFF]' : 'text-gray-900'
+                isHovered ? 'text-[#6F5ACC]' : 'text-gray-900'
               }`}>
                 {step.title}
               </h3>
@@ -274,7 +274,7 @@ const VerticalTimelineStep: React.FC<VerticalTimelineStepProps> = ({
                   >
                     <div className="flex items-start space-x-3">
                       <div className={`w-2 h-2 rounded-full mt-2 transition-all duration-300 ${
-                        isHovered ? 'bg-gradient-to-r from-[#443EFF] to-[#FF6B35] scale-125' : 'bg-gray-400'
+                        isHovered ? 'bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] scale-125' : 'bg-gray-400'
                       }`} />
                       <div className="flex-1">
                         <h4 className="font-semibold text-gray-800 mb-1 text-sm">{item.name}</h4>
@@ -305,8 +305,8 @@ const JourneyTimeline: React.FC = () => {
       <div className="absolute inset-0 bg-gradient-to-tr from-purple-50/20 via-transparent to-orange-50/20" />
       
       {/* Animated Background Elements */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-gradient-to-br from-[#443EFF]/5 to-[#FF6B35]/5 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-bl from-[#FF6B35]/5 to-[#443EFF]/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-20 left-10 w-64 h-64 bg-gradient-to-br from-[#6F5ACC]/5 to-[#A291FB]/5 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-bl from-[#A291FB]/5 to-[#6F5ACC]/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
       
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Enhanced Header */}
@@ -316,7 +316,7 @@ const JourneyTimeline: React.FC = () => {
               ? 'opacity-100 transform translate-y-0' 
               : 'opacity-0 transform translate-y-8'
           }`}>
-            <span className="bg-gradient-to-r from-[#443EFF] via-purple-600 to-[#FF6B35] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#6F5ACC] via-purple-600 to-[#A291FB] bg-clip-text text-transparent">
               Study Abroad Journey
             </span>
           </h2>
@@ -332,9 +332,9 @@ const JourneyTimeline: React.FC = () => {
         {/* Vertical Timeline Container */}
         <div className="relative">
           {/* Central Connecting Line - Desktop Only */}
-          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-gray-200 via-[#443EFF]/30 to-[#FF6B35]/30 rounded-full" style={{ height: `${journeySteps.length * 400}px` }}>
-            <div 
-              className={`w-full bg-gradient-to-b from-[#443EFF] to-[#FF6B35] rounded-full transition-all duration-2000 ease-out ${
+          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-gray-200 via-[#6F5ACC]/30 to-[#A291FB]/30 rounded-full" style={{ height: `${journeySteps.length * 400}px` }}>
+            <div
+              className={`w-full bg-gradient-to-b from-[#6F5ACC] to-[#A291FB] rounded-full transition-all duration-2000 ease-out ${
                 isInView ? 'h-full opacity-100' : 'h-0 opacity-0'
               }`}
               style={{ transitionDelay: '500ms' }}

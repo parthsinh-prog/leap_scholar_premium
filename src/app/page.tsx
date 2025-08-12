@@ -501,6 +501,31 @@ export default function HomePage() {
   const unifiedSelection = useSelector<RootState, UnifiedSelection>((state) => state.ui.unifiedSelection)
   const openFaq = useSelector<RootState, number | null>((state) => state.ui.openFaqIndex)
 
+  // Helper function to highlight key terms (but not for LS Plus)
+  const highlightKeyTerms = (text: string, planTier: string) => {
+    // Don't highlight anything for LS Plus - keep it basic
+    if (planTier === 'LS Plus') {
+      return text;
+    }
+    
+    // Only highlight premium features for LS Premium and LS Elite
+    const keyTerms = [
+      'Unlimited', 'Upto 3', 'Upto 7',
+      'Premium', 'Lead Counsellor', 'Senior Counsellor',
+      'Band Assurance',
+      'End-to-End', 'APS',
+      'Accommodation', 'Forex Partners'
+    ];
+    
+    let highlightedText = text;
+    keyTerms.forEach(term => {
+      const regex = new RegExp(`\\b${term}\\b`, 'gi');
+      highlightedText = highlightedText.replace(regex, `<span class="font-bold text-[#6F5ACC]">${term}</span>`);
+    });
+    
+    return highlightedText;
+  };
+
   // Modal state for add-ons and credits
   const [openAddOnsModal, setOpenAddOnsModal] = useState<number | null>(null)
   const [openCreditsModal, setOpenCreditsModal] = useState<number | null>(null)
@@ -553,15 +578,15 @@ export default function HomePage() {
   }, [])
 
   // New unified options for the 4-button layout
-  const unifiedOptions = [
+  const unifiedOptions = useMemo(() => [
     { key: 'usa-unified', label: '🇺🇸 UG/MBA/MS', icon: '🇺🇸' },
     { key: 'germany', label: '🇩🇪 Germany', icon: '🇩🇪' },
     { key: 'france', label: '🇫🇷 France', icon: '🇫🇷' },
     { key: 'rest-of-europe', label: '🇪🇺 Rest of Europe', icon: '🇪🇺' },
-  ] as const;
+  ] as const, []);
 
   // Get plans from unified data structure
-  let plans: Plan[] = unifiedPlansData[unifiedSelection]?.plans || []
+  const plans: Plan[] = unifiedPlansData[unifiedSelection]?.plans || []
 
   // --- Unified Selector Animation State ---
   const optionBtnRefs = useRef<(HTMLButtonElement | null)[]>([])
@@ -641,21 +666,31 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-white min-w-full">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-b from-[#F4F3FF] to-white pt-16 md:pt-24 pb-12 md:pb-20 text-center flex flex-col items-center">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-3 md:mb-4 font-heading px-6">
-          LEAP SCHOLAR{" "}
-          <span className="bg-gradient-to-r from-[#5B5FE3] to-[#FF6B35] bg-clip-text text-transparent">PREMIUM</span>
-        </h1>
-        <p className="text-sm sm:text-base md:text-lg text-gray-500 mb-4 md:mb-6 max-w-2xl mx-auto font-body px-6">
-          The premium service which
-        </p>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-8 md:mb-12 max-w-6xl mx-auto font-body px-6 leading-normal whitespace-nowrap bg-gradient-to-r from-[#5B5FE3] to-[#FF6B35] bg-clip-text text-transparent pb-2">
-          helps you land your dream College
-        </h2>
+      {/* Hero Section - HGI iOS Design */}
+      <section className="bg-gradient-to-b from-[#F4F3FF] to-white pt-20 md:pt-32 pb-16 md:pb-24 text-center flex flex-col items-center">
+        {/* Brand Identifier - Smaller and Elegant */}
+        <div className="mb-6 md:mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-sm border border-[#6F5ACC]/20">
+            <span className="text-sm md:text-base font-semibold text-gray-700 tracking-wide">LEAP SCHOLAR</span>
+            <span className="text-sm md:text-base font-bold bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] bg-clip-text text-transparent">PREMIUM</span>
+          </div>
+        </div>
         
-        {/* Unified Selector - 4 buttons with HGI iOS spacing */}
-        <div className="flex justify-center mb-6" data-section="unified-selector">
+        {/* Hero Statement - The Main Focus */}
+        <div className="mb-12 md:mb-16">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight font-heading px-6 leading-[1.1] max-w-6xl mx-auto">
+            <span className="bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] bg-clip-text text-transparent">
+              Your Dream University
+            </span>
+            <br />
+            <span className="text-gray-900">
+              Awaits
+            </span>
+          </h1>
+        </div>
+        
+        {/* Unified Selector - HGI iOS spacing */}
+        <div className="flex justify-center mb-8" data-section="unified-selector">
           <div className="inline-flex gap-3 rounded-2xl p-2 flex-wrap justify-center">
             {unifiedOptions.map((option, idx: number) => (
               <button
@@ -666,8 +701,8 @@ export default function HomePage() {
                 }}
                 className={`px-6 py-4 rounded-xl font-semibold text-sm sm:text-base focus:outline-none transition-all duration-300 ease-out transform
                   ${unifiedSelection === option.key 
-                    ? "bg-[#443EFF] text-white shadow-lg shadow-[#443EFF]/30 scale-105" 
-                    : "bg-white/80 text-[#443EFF] hover:bg-white hover:shadow-md hover:scale-102"
+                    ? "bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] text-white shadow-lg shadow-[#6F5ACC]/30 scale-105" 
+                    : "bg-white/80 text-[#6F5ACC] hover:bg-white hover:shadow-md hover:scale-102"
                   }
                 `}
                 onClick={() => {
@@ -720,7 +755,7 @@ export default function HomePage() {
                   >
                     {plan.tier === "LS Elite" && (
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 flex justify-center w-full">
-                        <span className="bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-2xl text-sm font-bold shadow-lg shadow-primary/30 whitespace-nowrap">
+                        <span className="bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] text-white px-6 py-3 rounded-2xl text-sm font-bold shadow-lg shadow-primary/30 whitespace-nowrap">
                           {getMostPopularTag(unifiedSelection)}
                         </span>
                       </div>
@@ -742,40 +777,64 @@ export default function HomePage() {
                       <div className="space-y-3 md:space-y-4 mb-6 md:mb-8 w-full">
                         <div className="flex items-start group/item">
                           <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
-                          <span className="text-gray-700 font-medium leading-relaxed">{plan.applications}</span>
+                          <span 
+                            className="text-gray-700 font-medium leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: highlightKeyTerms(plan.applications, plan.tier) }}
+                          />
                         </div>
                         <div className="flex items-start group/item">
                           <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
-                          <span className="text-gray-700 font-medium leading-relaxed">{plan.counsellor}</span>
+                          <span 
+                            className="text-gray-700 font-medium leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: highlightKeyTerms(plan.counsellor, plan.tier) }}
+                          />
                         </div>
                         <div className="flex items-start group/item">
                           <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
-                          <span className="text-gray-700 font-medium leading-relaxed">{plan.ielts}</span>
+                          <span 
+                            className="text-gray-700 font-medium leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: highlightKeyTerms(plan.ielts, plan.tier) }}
+                          />
                         </div>
                         <div className="flex items-start group/item">
                           <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
-                          <span className="text-gray-700 font-medium leading-relaxed">{plan.sopLorSupport}</span>
+                          <span 
+                            className="text-gray-700 font-medium leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: highlightKeyTerms(plan.sopLorSupport, plan.tier) }}
+                          />
                         </div>
                         <div className="flex items-start group/item">
                           <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
-                          <span className="text-gray-700 font-medium leading-relaxed">{plan.visaSupport}</span>
+                          <span 
+                            className="text-gray-700 font-medium leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: highlightKeyTerms(plan.visaSupport, plan.tier) }}
+                          />
                         </div>
                         <div className="flex items-start group/item">
                           <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
-                          <span className="text-gray-700 font-medium leading-relaxed">{plan.scholarshipSupport}</span>
+                          <span 
+                            className="text-gray-700 font-medium leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: highlightKeyTerms(plan.scholarshipSupport, plan.tier) }}
+                          />
                         </div>
                         <div className="flex items-start group/item">
                           <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
-                          <span className="text-gray-700 font-medium leading-relaxed">
-                            {plan.accommodationSupport ? "Access to Accommodation and Forex Partners" : "No Accommodation and Forex Support"}
-                          </span>
+                          <span 
+                            className="text-gray-700 font-medium leading-relaxed"
+                            dangerouslySetInnerHTML={{ 
+                              __html: highlightKeyTerms(
+                                plan.accommodationSupport ? "Access to Accommodation and Forex Partners" : "No Accommodation and Forex Support",
+                                plan.tier
+                              ) 
+                            }}
+                          />
                         </div>
                       </div>
                       {/* Credits Modal Trigger */}
                       <div className="w-full flex justify-center relative mb-4">
                         <button
                           type="button"
-                          className="bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary text-primary px-6 py-3 rounded-xl font-semibold text-base shadow hover:bg-gradient-to-r hover:from-primary hover:to-secondary hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary h-12 min-w-[240px] whitespace-nowrap"
+                          className="bg-gradient-to-r from-[#6F5ACC]/10 to-[#A291FB]/10 border border-primary text-primary px-6 py-3 rounded-xl font-semibold text-base shadow hover:bg-gradient-to-r hover:from-[#6F5ACC] hover:to-[#A291FB] hover:text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary h-12 min-w-[240px] whitespace-nowrap"
                           onClick={() => setOpenCreditsModal(index)}
                           aria-label="View Credits Details"
                         >
@@ -790,7 +849,7 @@ export default function HomePage() {
                             <div className="p-6">
                               <div className="flex items-center justify-between mb-4">
                                 <h4 className="font-bold text-primary text-lg flex items-center">
-                                  <div className="w-2 h-2 bg-gradient-to-r from-primary to-secondary rounded-full mr-3 animate-pulse"></div>
+                                  <div className="w-2 h-2 bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] rounded-full mr-3 animate-pulse"></div>
                                   Credits Worth ₹{plan.creditTotal.toLocaleString("en-IN")}
                                 </h4>
                                 <button
@@ -809,8 +868,8 @@ export default function HomePage() {
                                     <div key={key} className="bg-gray-50/80 backdrop-blur-sm rounded-xl p-3 border border-gray-100/50 hover:bg-gray-100/80 transition-all duration-300 group/item">
                                       <div className="flex items-center justify-between">
                                         <div className="flex items-center">
-                                          <div className="w-8 h-8 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center mr-3 group-hover/item:scale-110 transition-transform duration-300">
-                                            <div className="w-2 h-2 bg-gradient-to-r from-primary to-secondary rounded-full"></div>
+                                          <div className="w-8 h-8 bg-gradient-to-br from-[#6F5ACC]/20 to-[#A291FB]/20 rounded-lg flex items-center justify-center mr-3 group-hover/item:scale-110 transition-transform duration-300">
+                                            <div className="w-2 h-2 bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] rounded-full"></di``v>
                                           </div>
                                           <span className="font-semibold text-gray-800 text-sm">
                                             {key.replace(/([A-Z])/g, " $1").replace(/^\s/, "")}
@@ -848,7 +907,7 @@ export default function HomePage() {
                               {/* Arrow indicator */}
                               <div className="absolute -top-2 right-8 w-4 h-4 bg-white border-l border-t border-gray-200 rotate-45 shadow" />
                               <div className="p-6">
-                                <div className="flex justify-between items-center mb-4">
+                                <div className="flex justify-between items-center mb-4">``
                                   <h4 className="font-bold text-[#3B5AFE] text-lg">Available add-ons</h4>
                                   <button
                                     type="button"
@@ -880,9 +939,9 @@ export default function HomePage() {
                       )}
                       
                       {/* Primary Action Button */}
-                      <div className="w-full">
+                      <div className="w-full flex justify-center">
                         <button
-                          className={`w-full py-3 px-8 rounded-2xl font-black text-base transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 h-12 whitespace-nowrap ${plan.tier === "LS Elite" ? "bg-gradient-to-r from-primary to-secondary text-white hover:from-secondary hover:to-primary shadow-primary/25" : "bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white shadow-primary/10"}`}
+                          className={`py-3 px-8 rounded-xl font-semibold text-base transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 h-12 min-w-[240px] whitespace-nowrap ${plan.tier === "LS Elite" ? "bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] text-white hover:from-[#A291FB] hover:to-[#6F5ACC] shadow-primary/25" : "bg-white border border-primary text-primary hover:bg-primary hover:text-white shadow-primary/10"}`}
                         >
                           Enrol Now
                         </button>
@@ -920,7 +979,7 @@ export default function HomePage() {
           <section className="py-16 md:py-24 bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 relative overflow-hidden">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5">
-              <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#443EFF] rounded-full blur-3xl"></div>
+              <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#6F5ACC] rounded-full blur-3xl"></div>
               <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#FF6B35] rounded-full blur-3xl"></div>
             </div>
             
@@ -935,7 +994,7 @@ export default function HomePage() {
               <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 md:mb-16 text-gray-900 font-heading tracking-tight">
                 See why our students{" "}
                 <span className="text-red-500 text-4xl md:text-5xl">❤</span>{" "}
-                <span className="bg-gradient-to-r from-[#443EFF] to-[#FF6B35] bg-clip-text text-transparent font-extrabold">
+                <span className="bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] bg-clip-text text-transparent font-extrabold">
                   us
                 </span>
               </h2>
@@ -952,7 +1011,7 @@ export default function HomePage() {
               <div className="max-w-3xl w-full mx-auto">
                 <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 md:mb-16 text-gray-900 font-heading tracking-tight drop-shadow-sm">
                   Got questions?{" "}
-                  <span className="bg-gradient-to-r from-[#443EFF] to-[#FF6B35] bg-clip-text text-transparent font-extrabold">
+                  <span className="bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] bg-clip-text text-transparent font-extrabold">
                     Find your answers here
                   </span>
                 </h2>
@@ -962,21 +1021,26 @@ export default function HomePage() {
                   return (
                     <div
                       key={index}
-                      className={`relative rounded-3xl border border-gray-100/60 bg-white/80 backdrop-blur-xl shadow-2xl shadow-primary/10 transition-all duration-400 overflow-hidden ${isOpen ? "ring-2 ring-primary/20" : ""}`}
+                      className={`relative transition-all duration-400 overflow-hidden rounded-2xl shadow-lg shadow-gray-200/40 ${isOpen ? "shadow-xl shadow-gray-300/50" : ""}`}
                     >
                       <button
-                        className={`w-full flex justify-between items-center px-7 py-6 text-left focus:outline-none transition-all duration-300 font-heading text-lg font-bold text-gray-900 hover:bg-primary/5 active:scale-[0.98]`}
+                        className={`w-full flex justify-between items-center px-7 py-6 text-left focus:outline-none focus:ring-0 border-0 outline-0 transition-all duration-300 font-heading text-lg font-bold text-gray-900 active:scale-[0.98]`}
                         onClick={() => dispatch(setOpenFaqIndex(isOpen ? null : index))}
                         aria-expanded={isOpen}
                         aria-controls={`faq-panel-${index}`}
-                        style={{ WebkitTapHighlightColor: "transparent" }}
+                        style={{ 
+                          WebkitTapHighlightColor: "transparent",
+                          border: "none",
+                          outline: "none",
+                          boxShadow: "none"
+                        }}
                       >
                         <span className="flex-1 text-left leading-snug">{faq.question}</span>
                         <span className="ml-4 flex items-center justify-center">
                           {isOpen ? (
-                            <ChevronUp className="w-7 h-7 text-[#443EFF] transition-transform duration-300" />
+                            <ChevronUp className="w-7 h-7 text-[#6F5ACC] transition-transform duration-300" />
                           ) : (
-                            <ChevronDown className="w-7 h-7 text-[#443EFF] transition-transform duration-300" />
+                            <ChevronDown className="w-7 h-7 text-[#6F5ACC] transition-transform duration-300" />
                           )}
                         </span>
                       </button>
@@ -992,7 +1056,7 @@ export default function HomePage() {
                       </div>
                       {/* Animated border indicator for open state */}
                       {isOpen && (
-                        <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-[#443EFF] to-[#FF6B35] animate-fadeIn" />
+                        <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-[#6F5ACC] to-[#A291FB] animate-fadeIn" />
                       )}
                     </div>
                   )
@@ -1008,7 +1072,7 @@ export default function HomePage() {
           <div className="text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-10 md:mb-16 text-gray-900 font-heading tracking-tight">
               Trusted and backed by{" "}
-              <span className="bg-gradient-to-r from-[#443EFF] to-[#FF6B35] bg-clip-text text-transparent font-extrabold">
+              <span className="bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] bg-clip-text text-transparent font-extrabold">
                 marquee global investors
               </span>
             </h2>
@@ -1074,8 +1138,14 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-12">
             <div className="md:col-span-1">
               <div className="flex items-center mb-6">
-                <div className="p-2 bg-primary/20 backdrop-blur-sm rounded-2xl mr-3">
-                  <GraduationCap className="w-8 h-8 text-primary" />
+                <div className="p-1 bg-white/10 backdrop-blur-sm rounded-2xl mr-4 overflow-visible">
+                  <Image 
+                    src="/leap.png" 
+                    alt="Leap Scholar Logo" 
+                    width={80} 
+                    height={80} 
+                    className="object-contain transform scale-125"
+                  />
                 </div>
                 <span className="text-2xl md:text-3xl font-bold font-heading bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                   LEAP SCHOLAR

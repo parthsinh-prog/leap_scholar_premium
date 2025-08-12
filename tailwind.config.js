@@ -8,14 +8,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#4A47FF',
-        secondary: '#5B5FE3',
+        primary: '#6F5ACC',
+        secondary: '#A291FB',
         accent: '#FF6B35',
         background: '#F4F3FF',
       },
       fontFamily: {
-        heading: ["'Plus Jakarta Sans'", 'sans-serif'],
-        body: ["Inter", 'sans-serif'],
+        heading: ['var(--font-plus-jakarta)', 'sans-serif'],
+        body: ['var(--font-inter)', 'sans-serif'],
       },
     },
   },
