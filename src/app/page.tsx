@@ -869,7 +869,7 @@ export default function HomePage() {
                                       <div className="flex items-center justify-between">
                                         <div className="flex items-center">
                                           <div className="w-8 h-8 bg-gradient-to-br from-[#6F5ACC]/20 to-[#A291FB]/20 rounded-lg flex items-center justify-center mr-3 group-hover/item:scale-110 transition-transform duration-300">
-                                            <div className="w-2 h-2 bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] rounded-full"></di``v>
+                                            <div className="w-2 h-2 bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] rounded-full"></div>
                                           </div>
                                           <span className="font-semibold text-gray-800 text-sm">
                                             {key.replace(/([A-Z])/g, " $1").replace(/^\s/, "")}
