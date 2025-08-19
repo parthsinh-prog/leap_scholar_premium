@@ -8,6 +8,7 @@ import type { RootState } from "../store"
 import { setRegion, setCountryOrProgram, setUnifiedSelection, setOpenFaqIndex } from "../store/uiSlice"
 import JourneyTimeline from "../components/JourneyTimeline/JourneyTimeline"
 import { AnimatedStatCard } from "../components/AnimatedStatCard/AnimatedStatCard"
+import { countryProgramData } from "../data/countryProgramData"
 
 // France: What makes Leap Scholar different?
 const leapStatsFrance = [
@@ -579,10 +580,7 @@ export default function HomePage() {
 
   // New unified options for the 4-button layout
   const unifiedOptions = useMemo(() => [
-    { key: 'usa-unified', label: '🇺🇸 UG/MBA/MS', icon: '🇺🇸' },
     { key: 'germany', label: '🇩🇪 Germany', icon: '🇩🇪' },
-    { key: 'france', label: '🇫🇷 France', icon: '🇫🇷' },
-    { key: 'rest-of-europe', label: '🇪🇺 Rest of Europe', icon: '🇪🇺' },
   ] as const, []);
 
   // Get plans from unified data structure
@@ -664,6 +662,22 @@ export default function HomePage() {
     return 'Most Popular'
   }
 
+  const [selectedRegion, setSelectedRegion] = React.useState("Germany");
+  const [selectedSubRegion, setSelectedSubRegion] = React.useState("Germany");
+
+  const handleRegionChange = (region: string) => {
+    setSelectedRegion(region);
+    // Reset sub-region to default when region changes
+    const defaultSubRegion = Object.keys(countryProgramData[region])[0];
+    setSelectedSubRegion(defaultSubRegion);
+  };
+
+  const handleSubRegionChange = (subRegion: string) => {
+    setSelectedSubRegion(subRegion);
+  };
+
+  const selectedData = countryProgramData[selectedRegion][selectedSubRegion];
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-white min-w-full">
       {/* Hero Section - HGI iOS Design */}
@@ -673,6 +687,9 @@ export default function HomePage() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-sm border border-[#6F5ACC]/20">
             <span className="text-sm md:text-base font-semibold text-gray-700 tracking-wide">LEAP SCHOLAR</span>
             <span className="text-sm md:text-base font-bold bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] bg-clip-text text-transparent">PREMIUM</span>
+          </div>
+          <div className="mt-3">
+            <span className="text-lg md:text-xl font-bold bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] bg-clip-text text-transparent">Germany</span>
           </div>
         </div>
         
@@ -687,44 +704,6 @@ export default function HomePage() {
               Awaits
             </span>
           </h1>
-        </div>
-        
-        {/* Unified Selector - HGI iOS spacing */}
-        <div className="flex justify-center mb-8" data-section="unified-selector">
-          <div className="inline-flex gap-3 rounded-2xl p-2 flex-wrap justify-center">
-            {unifiedOptions.map((option, idx: number) => (
-              <button
-                key={option.key}
-                ref={(el) => {
-                  optionBtnRefs.current[idx] = el
-                  return undefined
-                }}
-                className={`px-6 py-4 rounded-xl font-semibold text-sm sm:text-base focus:outline-none transition-all duration-300 ease-out transform
-                  ${unifiedSelection === option.key 
-                    ? "bg-gradient-to-r from-[#6F5ACC] to-[#A291FB] text-white shadow-lg shadow-[#6F5ACC]/30 scale-105" 
-                    : "bg-white/80 text-[#6F5ACC] hover:bg-white hover:shadow-md hover:scale-102"
-                  }
-                `}
-                onClick={() => {
-                  dispatch(setUnifiedSelection(option.key as UnifiedSelection))
-                  // Auto-scroll to content sections after selection
-                  setTimeout(() => {
-                    if (segmentedControlRef.current) {
-                      const headerHeight = 80
-                      const elementTop = segmentedControlRef.current.offsetTop
-                      window.scrollTo({
-                        top: elementTop - headerHeight,
-                        behavior: "smooth",
-                      })
-                    }
-                  }, 100)
-                }}
-                aria-pressed={unifiedSelection === option.key}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -776,49 +755,49 @@ export default function HomePage() {
                       </div>
                       <div className="space-y-3 md:space-y-4 mb-6 md:mb-8 w-full">
                         <div className="flex items-start group/item">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover:item:scale-110 transition-transform duration-200" />
                           <span 
                             className="text-gray-700 font-medium leading-relaxed"
                             dangerouslySetInnerHTML={{ __html: highlightKeyTerms(plan.applications, plan.tier) }}
                           />
                         </div>
                         <div className="flex items-start group/item">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover:item:scale-110 transition-transform duration-200" />
                           <span 
                             className="text-gray-700 font-medium leading-relaxed"
                             dangerouslySetInnerHTML={{ __html: highlightKeyTerms(plan.counsellor, plan.tier) }}
                           />
                         </div>
                         <div className="flex items-start group/item">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover:item:scale-110 transition-transform duration-200" />
                           <span 
                             className="text-gray-700 font-medium leading-relaxed"
                             dangerouslySetInnerHTML={{ __html: highlightKeyTerms(plan.ielts, plan.tier) }}
                           />
                         </div>
                         <div className="flex items-start group/item">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover:item:scale-110 transition-transform duration-200" />
                           <span 
                             className="text-gray-700 font-medium leading-relaxed"
                             dangerouslySetInnerHTML={{ __html: highlightKeyTerms(plan.sopLorSupport, plan.tier) }}
                           />
                         </div>
                         <div className="flex items-start group/item">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover:item:scale-110 transition-transform duration-200" />
                           <span 
                             className="text-gray-700 font-medium leading-relaxed"
                             dangerouslySetInnerHTML={{ __html: highlightKeyTerms(plan.visaSupport, plan.tier) }}
                           />
                         </div>
                         <div className="flex items-start group/item">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover:item:scale-110 transition-transform duration-200" />
                           <span 
                             className="text-gray-700 font-medium leading-relaxed"
                             dangerouslySetInnerHTML={{ __html: highlightKeyTerms(plan.scholarshipSupport, plan.tier) }}
                           />
                         </div>
                         <div className="flex items-start group/item">
-                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200" />
+                          <CheckCircle className="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0 group-hover:item:scale-110 transition-transform duration-200" />
                           <span 
                             className="text-gray-700 font-medium leading-relaxed"
                             dangerouslySetInnerHTML={{ 
